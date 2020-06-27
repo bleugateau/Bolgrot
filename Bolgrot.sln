@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{AD4E721E-009D-4C03-B819-AF442530D529}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E522E4F3-68FB-4E02-86FC-3B721923FD12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolgrot.Core.Ankama.Protocol", "Bolgrot.Core.Ankama.Protocol\Bolgrot.Core.Ankama.Protocol.csproj", "{75C564E1-1F8A-452B-9452-5DDF73766CDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolgrot.Core.Common", "Bolgrot.Core.Common\Bolgrot.Core.Common.csproj", "{79094BAC-1CB2-48CC-AB44-06B75BA37EE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{4D20BDF0-BBBC-4D58-94C9-8681F7C9BCE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolgrot.Server.Auth", "Bolgrot.Server.Auth\Bolgrot.Server.Auth.csproj", "{9FD037B3-8660-40AA-A261-747A271273BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolgrot.Server.Game", "Bolgrot.Server.Game\Bolgrot.Server.Game.csproj", "{E74ED9E9-E6F0-4797-ACA1-9A30ACCA5350}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolgrot.Tools.Mitm", "Bolgrot.Tools.Mitm\Bolgrot.Tools.Mitm.csproj", "{6DFFD95B-7027-4343-B3B2-4645B7C772E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{75C564E1-1F8A-452B-9452-5DDF73766CDD} = {E522E4F3-68FB-4E02-86FC-3B721923FD12}
+		{79094BAC-1CB2-48CC-AB44-06B75BA37EE7} = {E522E4F3-68FB-4E02-86FC-3B721923FD12}
+		{9FD037B3-8660-40AA-A261-747A271273BF} = {4D20BDF0-BBBC-4D58-94C9-8681F7C9BCE7}
+		{E74ED9E9-E6F0-4797-ACA1-9A30ACCA5350} = {4D20BDF0-BBBC-4D58-94C9-8681F7C9BCE7}
+		{6DFFD95B-7027-4343-B3B2-4645B7C772E8} = {AD4E721E-009D-4C03-B819-AF442530D529}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75C564E1-1F8A-452B-9452-5DDF73766CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C564E1-1F8A-452B-9452-5DDF73766CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C564E1-1F8A-452B-9452-5DDF73766CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C564E1-1F8A-452B-9452-5DDF73766CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79094BAC-1CB2-48CC-AB44-06B75BA37EE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79094BAC-1CB2-48CC-AB44-06B75BA37EE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79094BAC-1CB2-48CC-AB44-06B75BA37EE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79094BAC-1CB2-48CC-AB44-06B75BA37EE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FD037B3-8660-40AA-A261-747A271273BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FD037B3-8660-40AA-A261-747A271273BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FD037B3-8660-40AA-A261-747A271273BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FD037B3-8660-40AA-A261-747A271273BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E74ED9E9-E6F0-4797-ACA1-9A30ACCA5350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E74ED9E9-E6F0-4797-ACA1-9A30ACCA5350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E74ED9E9-E6F0-4797-ACA1-9A30ACCA5350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E74ED9E9-E6F0-4797-ACA1-9A30ACCA5350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DFFD95B-7027-4343-B3B2-4645B7C772E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DFFD95B-7027-4343-B3B2-4645B7C772E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DFFD95B-7027-4343-B3B2-4645B7C772E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DFFD95B-7027-4343-B3B2-4645B7C772E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

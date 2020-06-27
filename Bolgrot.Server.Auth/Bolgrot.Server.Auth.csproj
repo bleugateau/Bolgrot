@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="5.2.0" />
+      <PackageReference Include="Dapper" Version="2.0.35" />
+      <PackageReference Include="EmbedIO" Version="3.4.3" />
+      <PackageReference Include="MySql.Data" Version="8.0.20" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Bolgrot.Core.Common\Bolgrot.Core.Common.csproj" />
+    </ItemGroup>
+
+</Project>
