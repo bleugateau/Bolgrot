@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
-using Bolgrot.Core.Common.Entities;
+using Bolgrot.Core.Common.Repository;
 using Bolgrot.Server.Auth.Proxy.Enums;
 using Bolgrot.Server.Auth.Proxy.Requests;
 using Bolgrot.Server.Auth.Proxy.Response;
-using Dapper;
 using Newtonsoft.Json;
 
 namespace Bolgrot.Server.Auth.Managers
@@ -20,11 +17,11 @@ namespace Bolgrot.Server.Auth.Managers
 
     public class HaapiManager : IHaapiManager
     {
-        private IDbConnection _databaseManager = null;
+        private IAccountRepository _accountRepository = null;
 
-        public HaapiManager(IDbConnection databaseManager)
+        public HaapiManager(IAccountRepository accountRepository)
         {
-            _databaseManager = databaseManager;
+            _accountRepository = accountRepository;
         }
 
         /**
@@ -35,11 +32,7 @@ namespace Bolgrot.Server.Auth.Managers
             var createApiResponse = new CreateApiResponse();
             var createApiFailedResponse = new CreateApiResponseFailed();
 
-            var account = this._databaseManager.QueryAsync<Account>("SELECT * FROM account WHERE login = @login", new
-                {
-                    login = createApiKeyRequest.login
-                }).Result
-                .FirstOrDefault();
+            var account = await this._accountRepository.GetAccountByLogin(createApiKeyRequest.login);
 
             //return failed if account is wrong
             if (account == null || account.Password != createApiKeyRequest.password)
@@ -48,14 +41,14 @@ namespace Bolgrot.Server.Auth.Managers
                 return JsonConvert.SerializeObject(createApiFailedResponse);
             }
 
-            account.ApiKey = Guid.NewGuid().ToString();
-            account.ApiKeyExpirationDate = DateTime.Now.AddHours(4);
-            account.Ip = ipAddress;
-
-            //update account
-            await this._databaseManager.ExecuteAsync(
-                "UPDATE account SET apikey = @ApiKey, ip = @Ip, apikey_expiration_date = @ApiKeyExpirationDate WHERE login = @Login",
-                account);
+            this._accountRepository.Entities().AddOrUpdate(account.Id, account, (i, editedAccount) =>
+            {
+                editedAccount.ApiKey = Guid.NewGuid().ToString();
+                editedAccount.ApiKeyExpirationDate = DateTime.Now.AddHours(4);
+                editedAccount.Ip = ipAddress;
+                return editedAccount;
+            });
+            
 
             createApiResponse.AccountId = account.Id;
             createApiResponse.AddedDate = DateTimeOffset.Now;
@@ -65,7 +58,7 @@ namespace Bolgrot.Server.Auth.Managers
                 Currency = "EUR"
             };
             createApiResponse.Key = account.ApiKey;
-            createApiResponse.ExpirationDate = account.ApiKeyExpirationDate;
+            createApiResponse.ExpirationDate = DateTime.Now.AddHours(4);
             createApiResponse.RefreshToken = "";
             createApiResponse.Ip = account.Ip;
 
@@ -78,26 +71,25 @@ namespace Bolgrot.Server.Auth.Managers
         public async Task<string> BuildToken(string apiKey)
         {
             var createTokenResponse = new CreateTokenResponse();
-            
-            var account = this._databaseManager.QueryAsync<Account>("SELECT * FROM account WHERE apikey = @apikey", new
-                {
-                    apikey = apiKey
-                }).Result
-                .FirstOrDefault();
-            
-            
+            var account = await this._accountRepository.GetAccountByApiKey(apiKey);
+
             if (account == null)
             {
                 return "";
             }
-            
-            account.Token = Guid.NewGuid().ToString();
 
-            await this._databaseManager.ExecuteAsync(
-                "UPDATE account SET token = @Token WHERE login = @Login",
-                account);
+            Console.WriteLine($"Token value before edit ${account.Token}");
+            
+            //edit token and save it
+            this._accountRepository.Entities().AddOrUpdate(account.Id, account, (i, editedAccount) =>
+            {
+                editedAccount.Token = Guid.NewGuid().ToString();
+                return editedAccount;
+            });
 
             createTokenResponse.Token = account.Token;
+            
+            Console.WriteLine($"Token value after edit ${createTokenResponse.Token}");
             
 
             return JsonConvert.SerializeObject(createTokenResponse);
