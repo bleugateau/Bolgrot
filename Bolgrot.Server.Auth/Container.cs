@@ -1,7 +1,9 @@
 ﻿using System.Data;
 using Autofac;
+using Bolgrot.Core.Common.Repository;
 using Bolgrot.Server.Auth.Managers;
 using MySql.Data.MySqlClient;
+using ServiceStack.OrmLite;
 
 namespace Bolgrot.Server.Auth
 {
@@ -16,8 +18,12 @@ namespace Bolgrot.Server.Auth
             {
                 var builder = new ContainerBuilder();
 
-                builder.RegisterInstance(new MySqlConnection("Server=localhost;Database=arkanic_auth;Uid=root;Pwd=;"))
-                    .As<IDbConnection>();
+                builder.Register<IDbConnection>(c =>
+                    new OrmLiteConnection(new OrmLiteConnectionFactory(
+                        "Server=localhost;Database=arkanic_auth;Uid=root;Pwd=;", MySql55Dialect.Provider)));
+
+                builder.Register<IAccountRepository>(c => new AccountRepository(c.Resolve<IDbConnection>())).SingleInstance();
+                
                 builder.RegisterType<HaapiManager>().As<IHaapiManager>();
 
                 _container = builder.Build();

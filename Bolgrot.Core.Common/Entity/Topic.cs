@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ServiceStack.DataAnnotations;
 
 namespace Bolgrot.Core.Common.Entities
 {
@@ -18,15 +19,5 @@ namespace Bolgrot.Core.Common.Entities
 
         [JsonProperty("added_date")]
         public string AddedDate { get; set; }
-
-
-        public Topic(long id, string title, string content, bool pinned, string addedDate)
-        {
-            Id = id;
-            Title = title;
-            Content = content;
-            Pinned = pinned;
-            AddedDate = addedDate;
-        }
     }
 }
