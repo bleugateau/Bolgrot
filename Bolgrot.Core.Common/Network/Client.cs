@@ -11,17 +11,22 @@ namespace Bolgrot.Core.Common.Network
     {
         public string ContextId { get; }
         
-        public ConcurrentDictionary<string, string> MessagesQueues { get; set; }
+        public ConcurrentDictionary<long, string> MessagesQueues { get; }
+
+        private long InstanceId = 0;
+        
 
         public Client(string contextId)
         {
             this.ContextId = contextId;
-            this.MessagesQueues = new ConcurrentDictionary<string, string>();
+            this.MessagesQueues = new ConcurrentDictionary<long, string>();
         }
 
         public void Send(NetworkMessage message)
         {
-            this.MessagesQueues.TryAdd(message._messageType, $"4{JsonConvert.SerializeObject(message)}");
+            
+            this.MessagesQueues.TryAdd(InstanceId, $"4{JsonConvert.SerializeObject(message)}");
+            InstanceId++;
         }
     }
 }
