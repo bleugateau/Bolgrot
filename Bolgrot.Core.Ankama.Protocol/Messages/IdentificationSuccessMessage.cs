@@ -1,27 +1,33 @@
-﻿namespace Bolgrot.Core.Ankama.Protocol.Messages
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
     public class IdentificationSuccessMessage : NetworkMessage
     {
 
-        public string login;
-        public string nickname;
-        public int accountId;
-        public int communityId;
-        public bool hasRights;
-        public string secretQuestion;
-        public long subscriptionEndDate;
-        public bool wasAlreadyConnected;
-        public double accountCreation;
-        public bool hasConsoleRight;
-        public string _groupFlags;
-        public string _applicationName;
-	    
+	    public string login;
+	    public string nickname;
+	    public long accountId;
+	    public int communityId;
+	    public bool hasRights;
+	    public string secretQuestion;
+	    public long subscriptionEndDate;
+	    public bool wasAlreadyConnected;
+	    public long accountCreation;
+	    public bool hasConsoleRight;
+	    public string _groupFlags;
+	    public string _applicationName;
+
 
         public IdentificationSuccessMessage()
         {
         }
 
-        public IdentificationSuccessMessage(string login, string nickname, int accountId, int communityId, bool hasRights, string secretQuestion, int subscriptionEndDate, bool wasAlreadyConnected, double accountCreation, bool hasConsoleRight, string _groupFlags, string _applicationName)
+        public IdentificationSuccessMessage(string login, string nickname, long accountId, int communityId, bool hasRights, string secretQuestion, long subscriptionEndDate, bool wasAlreadyConnected, long accountCreation, bool hasConsoleRight, string _groupFlags, string _applicationName)
         {
             this.login = login;
             this.nickname = nickname;
@@ -35,6 +41,7 @@
             this.hasConsoleRight = hasConsoleRight;
             this._groupFlags = _groupFlags;
             this._applicationName = _applicationName;
+
         }
     }
 }

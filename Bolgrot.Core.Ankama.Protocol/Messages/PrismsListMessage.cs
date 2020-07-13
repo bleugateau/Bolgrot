@@ -7,19 +7,19 @@ using Bolgrot.Core.Ankama.Protocol.Types;
 
 namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
-    public class ServersListMessage : NetworkMessage
+    public class PrismsListMessage : NetworkMessage
     {
 
-	    public GameServerInformations[] servers;
+	    public PrismGeolocalizedInformation[] prisms;
 
 
-        public ServersListMessage()
+        public PrismsListMessage()
         {
         }
 
-        public ServersListMessage(GameServerInformations[] servers)
+        public PrismsListMessage(PrismGeolocalizedInformation[] prisms)
         {
-            this.servers = servers;
+            this.prisms = prisms;
 
         }
     }

@@ -4,22 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bolgrot.Core.Ankama.Protocol.Types;
+using Newtonsoft.Json;
 
 namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
-    public class ServersListMessage : NetworkMessage
+    public class ObjectAddedMessage : NetworkMessage
     {
 
-	    public GameServerInformations[] servers;
+        [JsonProperty("object")]
+	    public ObjectItem @object;
 
 
-        public ServersListMessage()
+        public ObjectAddedMessage()
         {
         }
 
-        public ServersListMessage(GameServerInformations[] servers)
+        public ObjectAddedMessage(ObjectItem @object)
         {
-            this.servers = servers;
+            this.@object = @object;
 
         }
     }

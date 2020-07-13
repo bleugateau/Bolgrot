@@ -7,19 +7,19 @@ using Bolgrot.Core.Ankama.Protocol.Types;
 
 namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
-    public class ServersListMessage : NetworkMessage
+    public class AccessoryPreviewMessage : NetworkMessage
     {
 
-	    public GameServerInformations[] servers;
+	    public EntityLook look;
 
 
-        public ServersListMessage()
+        public AccessoryPreviewMessage()
         {
         }
 
-        public ServersListMessage(GameServerInformations[] servers)
+        public AccessoryPreviewMessage(EntityLook look)
         {
-            this.servers = servers;
+            this.look = look;
 
         }
     }

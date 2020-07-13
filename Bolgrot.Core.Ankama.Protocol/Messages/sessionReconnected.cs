@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
-    public class CredentialsAcknowledgementMessage : NetworkMessage
+    public class sessionReconnected : NetworkMessage
     {
-        public CredentialsAcknowledgementMessage()
+        public sessionReconnected()
         {
         }
     }

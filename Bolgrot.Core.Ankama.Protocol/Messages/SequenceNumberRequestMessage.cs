@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
-    public class CredentialsAcknowledgementMessage : NetworkMessage
+    public class SequenceNumberRequestMessage : NetworkMessage
     {
-        public CredentialsAcknowledgementMessage()
+        
+        public SequenceNumberRequestMessage()
         {
         }
     }

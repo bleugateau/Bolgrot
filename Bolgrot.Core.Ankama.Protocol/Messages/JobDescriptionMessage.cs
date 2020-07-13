@@ -7,19 +7,19 @@ using Bolgrot.Core.Ankama.Protocol.Types;
 
 namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
-    public class ServersListMessage : NetworkMessage
+    public class JobDescriptionMessage : NetworkMessage
     {
 
-	    public GameServerInformations[] servers;
+	    public JobDescription[] jobsDescription;
 
 
-        public ServersListMessage()
+        public JobDescriptionMessage()
         {
         }
 
-        public ServersListMessage(GameServerInformations[] servers)
+        public JobDescriptionMessage(JobDescription[] jobsDescription)
         {
-            this.servers = servers;
+            this.jobsDescription = jobsDescription;
 
         }
     }

@@ -1,9 +1,17 @@
-﻿namespace Bolgrot.Core.Ankama.Protocol.Messages
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Bolgrot.Core.Ankama.Protocol.Messages
 {
     public class HelloConnectMessage : NetworkMessage
     {
-        public string salt;
-        public int[] key;
+
+	    public string salt;
+	    public int[] key;
+
 
         public HelloConnectMessage()
         {
@@ -13,6 +21,7 @@
         {
             this.salt = salt;
             this.key = key;
+
         }
     }
 }
