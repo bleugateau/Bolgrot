@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Bolgrot.Tools.Mitm")]
+[assembly: AssemblyTitle("Bolgrot.Tools.MITM")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Bolgrot.Tools.Mitm")]
+[assembly: AssemblyProduct("Bolgrot.Tools.MITM")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("6DFFD95B-7027-4343-B3B2-4645B7C772E8")]
+[assembly: Guid("203D2556-7670-4A7D-BE31-C820CD4D1568")]
 
 // Version information for an assembly consists of the following four values:
 //
