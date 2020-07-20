@@ -18,6 +18,7 @@ namespace Bolgrot.Server.Auth.Managers
     public class HaapiManager : IHaapiManager
     {
         private IAccountRepository _accountRepository = null;
+        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public HaapiManager(IAccountRepository accountRepository)
         {
@@ -77,8 +78,8 @@ namespace Bolgrot.Server.Auth.Managers
             {
                 return "";
             }
-
-            Console.WriteLine($"Token value before edit ${account.Token}");
+            
+            this._logger.Debug($"Token value before edit ${account.Token}");
             
             //edit token and save it
             this._accountRepository.Entities().AddOrUpdate(account.Id, account, (i, editedAccount) =>
@@ -89,7 +90,7 @@ namespace Bolgrot.Server.Auth.Managers
 
             createTokenResponse.Token = account.Token;
             
-            Console.WriteLine($"Token value after edit ${createTokenResponse.Token}");
+            this._logger.Debug($"Token value after edit ${createTokenResponse.Token}");
             
 
             return JsonConvert.SerializeObject(createTokenResponse);

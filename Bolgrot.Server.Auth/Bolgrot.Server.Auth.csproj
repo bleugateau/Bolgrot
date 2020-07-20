@@ -9,6 +9,7 @@
       <PackageReference Include="Autofac" Version="5.2.0" />
       <PackageReference Include="EmbedIO" Version="3.4.3" />
       <PackageReference Include="MySql.Data" Version="8.0.20" />
+      <PackageReference Include="NLog" Version="4.7.2" />
     </ItemGroup>
 
     <ItemGroup>

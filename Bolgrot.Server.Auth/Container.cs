@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Runtime.CompilerServices;
 using Autofac;
 using Bolgrot.Core.Common.Managers;
 using Bolgrot.Core.Common.Managers.Data;
@@ -13,25 +14,35 @@ namespace Bolgrot.Server.Auth
     {
         private static IContainer _container = null;
 
+
+        public static void Initialize()
+        {
+            if (_container != null)
+                return;
+
+            var builder = new ContainerBuilder();
+
+            builder.Register<IDbConnection>(c =>
+                new OrmLiteConnection(new OrmLiteConnectionFactory(
+                    "Server=localhost;Database=arkanic_auth;Uid=root;Pwd=;", MySql55Dialect.Provider)));
+
+            //repository
+            builder.Register<IAccountRepository>(c => new AccountRepository(c.Resolve<IDbConnection>()))
+                .SingleInstance();
+
+            //managers
+            builder.RegisterType<DataManager>().As<IDataManager>().OnActivating(e => e.Instance.Initialize())
+                .SingleInstance();
+            builder.RegisterType<HaapiManager>().As<IHaapiManager>().SingleInstance();
+
+            _container = builder.Build();
+        }
+
         public static IContainer Instance()
         {
-
             if (_container == null)
             {
-                var builder = new ContainerBuilder();
-
-                builder.Register<IDbConnection>(c =>
-                    new OrmLiteConnection(new OrmLiteConnectionFactory(
-                        "Server=localhost;Database=arkanic_auth;Uid=root;Pwd=;", MySql55Dialect.Provider)));
-
-                //repository
-                builder.Register<IAccountRepository>(c => new AccountRepository(c.Resolve<IDbConnection>())).SingleInstance();
-                
-                //managers
-                builder.RegisterType<DataManager>().As<IDataManager>().OnActivating(e => e.Instance.Initialize()).SingleInstance();
-                builder.RegisterType<HaapiManager>().As<IHaapiManager>().SingleInstance();
-
-                _container = builder.Build();
+                Initialize();
             }
 
             return _container;

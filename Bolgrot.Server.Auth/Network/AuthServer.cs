@@ -10,9 +10,10 @@ namespace Bolgrot.Server.Auth.Network
 {
     public class AuthServer : WebSocketModule
     {
-        
         public ConcurrentDictionary<string, Client> Clients { get; set; }
         
+        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         public AuthServer(string urlPath) : base(urlPath, false)
         {
             this.Clients = new ConcurrentDictionary<string, Client>();
@@ -20,8 +21,13 @@ namespace Bolgrot.Server.Auth.Network
 
         protected override Task OnClientConnectedAsync(IWebSocketContext context)
         {
-            Console.WriteLine($"Client {context.Id} connected");
-            this.Clients.TryAdd(context.Id, new Client(context.Id));
+            // Console.WriteLine($"Client {context.Id} connected");
+            this._logger.Info($"Client {context.Id} connected");
+            
+            var client = new Client(context.Id, context);
+            client.OnDisconnect += DisconnectEventHandler;
+            
+            this.Clients.TryAdd(context.Id, client);
 
             SendAsync(context, "0{\"sid\":\"h-Tc6sbvNVUqwrImAL-o\",\"upgrades\":[],\"pingInterval\":25000,\"pingTimeout\":5000}");
             
@@ -32,19 +38,26 @@ namespace Bolgrot.Server.Auth.Network
         {
             string message = System.Text.Encoding.UTF8.GetString(buffer);
             
-            Console.WriteLine($"Client {context.Id} sent => {message}");
+            this._logger.Info($"[RCV] {message} from {context.Id}.");
             
             if (!this.Clients.ContainsKey(context.Id))
                 return null;
 
             this.Clients.TryGetValue(context.Id, out Client client);
 
+
+            //primus ping protocol
+            if (message.StartsWith("2"))
+            {
+                SendAsync(context, "3");
+            }
+            
             FrameIntercepterManager.Intercept(client, message.Substring(1, message.Length - 1));
 
             
             foreach (var messageInQueue in client.MessagesQueues)
             {
-                Console.WriteLine($"Send => {messageInQueue.Key}.");
+                this._logger.Info($"[SND] {messageInQueue} to {context.Id}.");
                 SendAsync(context, messageInQueue.Value);
             }
             
@@ -60,12 +73,25 @@ namespace Bolgrot.Server.Auth.Network
 
         protected override Task OnClientDisconnectedAsync(IWebSocketContext context)
         {
-            if (!this.Clients.ContainsKey(context.Id))
+            return Disconnect(context.Id);
+        }
+
+        protected void DisconnectEventHandler(object sender, EventArgs eventArgs)
+        {
+            Disconnect(((Client)sender).ContextId);
+        }
+
+        private Task Disconnect(string contextId)
+        {
+            if (!this.Clients.ContainsKey(contextId))
                 return null;
+
+            this.Clients.TryRemove(contextId, out Client removedClient);
+            SendAsync(removedClient.Context, "4\"primus::server::close\"");
             
-            this.Clients.TryRemove(context.Id, out Client removedClient);
-            
-            Console.WriteLine($"Client {context.Id} disconnected");
+            this.CloseAsync(removedClient.Context);
+
+            this._logger.Info($"Client {removedClient.ContextId} disconnected.");
             
             return Task.CompletedTask;
         }

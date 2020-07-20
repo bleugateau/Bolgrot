@@ -7,6 +7,7 @@ using EmbedIO.Files;
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
 using EmbedIO.WebSockets;
+using Swan.Logging;
 
 namespace Bolgrot.Server.Auth.Proxy
 {
@@ -34,6 +35,9 @@ namespace Bolgrot.Server.Auth.Proxy
 
         private WebServer CreateWebServer()
         {
+            
+            Logger.UnregisterLogger<ConsoleLogger>();
+
             return new WebServer(o => o
                     .WithUrlPrefix(this.ProxyUrl)
                     .WithMode(HttpListenerMode.Microsoft)
