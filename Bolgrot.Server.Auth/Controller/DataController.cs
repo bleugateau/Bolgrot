@@ -1,9 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac;
+using Bolgrot.Core.Common.Managers;
+using Bolgrot.Core.Common.Managers.Data;
+using Bolgrot.Server.Auth.Proxy.Requests;
 using EmbedIO;
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Bolgrot.Server.Auth.Controller
@@ -50,6 +56,18 @@ namespace Bolgrot.Server.Auth.Controller
             
 
             await this.HttpContext.SendStringAsync(assetsVersionsJson.ToString(), "application/json", Encoding.Default);
+        }
+
+        [Route(HttpVerbs.Post, "/data/map")]
+        public async Task GetApiDataMap()
+        {
+            string requestedPayload = await this.HttpContext.GetRequestBodyAsStringAsync();
+            
+            var mapDataRequest = JsonConvert.DeserializeObject<MapDataRequest>(requestedPayload);
+            var data = await Container.Instance().Resolve<IDataManager>().GetDataByClassName(mapDataRequest.@class);
+            
+            
+            await this.HttpContext.SendStringAsync(JsonConvert.SerializeObject(data), "application/json", Encoding.Default);
         }
     }
 }

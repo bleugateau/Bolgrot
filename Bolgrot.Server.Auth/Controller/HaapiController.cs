@@ -58,7 +58,7 @@ namespace Bolgrot.Server.Auth.Controller
             await this.HttpContext.SendStringAsync(response, "application/json", Encoding.Default);
         }
         
-        [Route(HttpVerbs.Get, "/haapi/Account/CreateToken")]
+        [EmbedIO.Routing.Route(HttpVerbs.Get, "/haapi/Account/CreateToken")]
         public async Task CreateToken()
         {
             
@@ -71,6 +71,10 @@ namespace Bolgrot.Server.Auth.Controller
 
             string response = await Container.Instance().Resolve<IHaapiManager>().BuildToken(apikey);
             
+            if (response.Length == 0)
+            {
+                this.HttpContext.Response.StatusCode = 601;
+            }
             
             await this.HttpContext.SendStringAsync(response, "application/json", Encoding.Default);
         }
