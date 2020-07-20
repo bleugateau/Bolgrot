@@ -32,9 +32,6 @@ namespace Bolgrot.Core.Common.Repository
                 this.Initialize().Wait();
             }
 
-            
-            Console.WriteLine($"{this._entities.Count} {typeof(T).Name}");
-            
             return this._entities;
         }
 

@@ -18,6 +18,8 @@ namespace Bolgrot.Core.Common.Entity
         
         public string Token { get; set; }
         
+        public string Ticket { get; set; }
+        
         public string ApiKey { get; set; }
         
         public string Ip { get; set; }
