@@ -1,6 +1,11 @@
-﻿using Bolgrot.Core.Ankama.Protocol.Messages;
+﻿using System.Threading.Tasks;
+using Autofac;
+using Bolgrot.Core.Ankama.Protocol.Messages;
+using Bolgrot.Core.Ankama.Protocol.SendMessages;
+using Bolgrot.Core.Ankama.Protocol.Types;
 using Bolgrot.Core.Common.Managers.Frames;
 using Bolgrot.Core.Common.Network;
+using Bolgrot.Core.Common.Repository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -16,32 +21,41 @@ namespace Bolgrot.Server.Auth.Frames
             client.Send(new HelloConnectMessage("kbgvrb5aYZa&udoTr&~z3JACZDKTe&.F", new int[] { }));
         }
         
+        [InterceptCall("disconnecting")]
+        public void DisconnectingCallFrame(Client client, JObject message)
+        {
+            client.Disconnect();
+        }
+        
         [InterceptCall("login")]
-        public void LoginCallFrame(Client client, JObject message)
+        public async Task LoginCallFrame(Client client, JObject message)
         {
             if (!message.ContainsKey("data"))
                 return;
+            
+            
+            var loginMessage = JsonConvert.DeserializeObject<LoginMessage>(message["data"].ToString());
 
-            // var loginMessage = JsonConvert.DeserializeObject<LoginMessage>(message["data"].ToString());
-            //
-            //
-            // //find user in database and check
-            //
-            // //check token
-            // //client.Send(new IdentificationFailedMessage(0));
-            //
-            //
-            // //valid user
-            // client.Send(new CredentialsAcknowledgementMessage());
-            // client.Send(new IdentificationSuccessMessage("4638024884374416908", "Test", 141231, 0, true, "DELETE ?", 0, false, 1577995402000, true, "", ""));
-            //
-            // //IPC to world
-            // client.Send(new ServersListMessage(new GameServerInformations[]
-            // {
-            //     new GameServerInformations(128, 3, 0, true, 1, 1583348790936, "Arkanic PvP", 3)
-            // }));
-            //
-            // client.Dispose();
+            var account = await Container.Instance().Resolve<IAccountRepository>().GetAccountByLogin(loginMessage.username);
+
+            if (account == null || account.Token != loginMessage.token)
+            {
+                client.Send(new AuthenticationTicketRefusedMessage());
+                return;
+            }
+            
+            //check for already connected
+            
+            client.Account = account;
+            
+            client.Send(new CredentialsAcknowledgementMessage());
+            client.Send(new IdentificationSuccessMessage(account.Login, account.Nickname, 141231, 0, true, "DELETE ?", 0, false, 1577995402000, true, "", ""));
+
+            //do IPC + characters number
+            client.Send(new ServersListMessage(new GameServerInformations[]
+            {
+                new GameServerInformations(405, 3, 0, true, 1, 1583348790936, "Bolgrot", 0)
+            }));
         }
     }
 }
