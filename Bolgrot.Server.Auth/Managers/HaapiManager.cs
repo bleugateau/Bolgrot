@@ -73,13 +73,13 @@ namespace Bolgrot.Server.Auth.Managers
         {
             var createTokenResponse = new CreateTokenResponse();
             var account = await this._accountRepository.GetAccountByApiKey(apiKey);
-
-            if (account == null)
+            
+            if (account == null || ((DateTime) account.ApiKeyExpirationDate <= DateTime.Now))
             {
                 return "";
             }
             
-            this._logger.Debug($"Token value before edit ${account.Token}");
+            this._logger.Debug($"Token value before edit {account.Token}");
             
             //edit token and save it
             this._accountRepository.Entities().AddOrUpdate(account.Id, account, (i, editedAccount) =>
@@ -90,7 +90,7 @@ namespace Bolgrot.Server.Auth.Managers
 
             createTokenResponse.Token = account.Token;
             
-            this._logger.Debug($"Token value after edit ${createTokenResponse.Token}");
+            this._logger.Debug($"Token value after edit {createTokenResponse.Token}");
             
 
             return JsonConvert.SerializeObject(createTokenResponse);
