@@ -18,7 +18,7 @@ namespace Bolgrot.Core.Common.Managers.Data
     {
         private ConcurrentDictionary<string, ConcurrentDictionary<int, object>> _data = new ConcurrentDictionary<string, ConcurrentDictionary<int, object>>();
         private bool _isInitialised = false;
-
+        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public DataManager()
         {
@@ -100,14 +100,14 @@ namespace Bolgrot.Core.Common.Managers.Data
             if (!this._data.ContainsKey(className))
             {
                 //logger
-                Console.WriteLine(className);
+                this._logger.Error($"{className} is not register.");
                 return null;
             }
             
             if (!File.Exists($"datas/map/{className}.json"))
             {
                 //logger
-                Console.WriteLine($"{className}.json missed.");
+                this._logger.Error($"{className}.json missed.");
                 return null;
             }
 
@@ -132,12 +132,12 @@ namespace Bolgrot.Core.Common.Managers.Data
                         data.TryAdd(Convert.ToInt32(entity.Key),
                             JsonConvert.DeserializeObject(entity.Value.ToString(), entityType));
                     }
-
-                    Console.WriteLine($"{data.Count} {entityType.Name} entity retrieved.");
+                    
+                    this._logger.Info($"{data.Count} {entityType.Name} entity retrieved.");
                 }
                 catch (Exception ex)
                 {
-                    //logger
+                    this._logger.Error(ex.Message);
                 }
 
                 reader.Close();
