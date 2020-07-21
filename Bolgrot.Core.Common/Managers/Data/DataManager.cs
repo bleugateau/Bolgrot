@@ -17,31 +17,32 @@ namespace Bolgrot.Core.Common.Managers.Data
     public class DataManager : IDataManager
     {
         private ConcurrentDictionary<string, ConcurrentDictionary<int, object>> _data = new ConcurrentDictionary<string, ConcurrentDictionary<int, object>>();
-        private bool _isInitialised = false;
+        private bool _isInitialized = false;
         private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public DataManager()
         {
-            
         }
 
 
+        /**
+         * Initialize the manager
+         */
         public void Initialize()
         {
-            if (_isInitialised)
+            if (_isInitialized)
             {
-                //logger
+                this._logger.Error("DataManager already initialized");
                 return;
             }
             
             this.RegisterData();
 
-            foreach (var registeredData in this._data)
-            {
-                this.GetDataByClassName(registeredData.Key);
-            }
+            this.FillData();
 
-            this._isInitialised = true;
+            this._isInitialized = true;
+            
+            this._logger.Info("DataManager initialized.");
         }
         
         /**
@@ -92,6 +93,57 @@ namespace Bolgrot.Core.Common.Managers.Data
         }
 
 
+
+        /**
+         * Retrieve and fill game data
+         */
+        public void FillData()
+        {
+            foreach (var registeredData in this._data)
+            {
+                if (!this._data.ContainsKey(registeredData.Key))
+                {
+                    this._logger.Error($"{registeredData.Key} is not register.");
+                    continue;
+                }
+            
+                if (!File.Exists($"datas/map/{registeredData.Key}.json"))
+                {
+                    this._logger.Error($"{registeredData.Key}.json missed.");
+                    continue;
+                }
+                
+                this._data.TryGetValue(registeredData.Key, out ConcurrentDictionary<int, object> data);
+                
+                StreamReader reader = new StreamReader($"datas/map/{registeredData.Key}.json");
+
+                try
+                {
+                    string classNameContent = reader.ReadToEnd();
+                    var entities = JsonConvert.DeserializeObject<JObject>(!classNameContent.StartsWith("{")
+                        ? "{" + classNameContent + "}"
+                        : classNameContent);
+
+                    
+                    Type entityType = Type.GetType($"Bolgrot.Core.Common.Entity.Data.{registeredData.Key}, Bolgrot.Core.Common", true);
+
+                    foreach (var entity in entities)
+                    {
+                        data.TryAdd(Convert.ToInt32(entity.Key),
+                            JsonConvert.DeserializeObject(entity.Value.ToString(), entityType));
+                    }
+                    
+                    this._logger.Info($"{data.Count} {entityType.Name} data retrieved.");
+                }
+                catch (Exception ex)
+                {
+                    this._logger.Error(ex.Message);
+                }
+
+                reader.Close();
+            }
+        }
+        
         /**
          * Retrieve and load game data
          */
@@ -113,36 +165,6 @@ namespace Bolgrot.Core.Common.Managers.Data
 
             this._data.TryGetValue(className, out ConcurrentDictionary<int, object> data);
 
-            if (data.Count == 0)
-            {
-                StreamReader reader = new StreamReader($"datas/map/{className}.json");
-
-                try
-                {
-                    string classNameContent = await reader.ReadToEndAsync();
-                    var entities = JsonConvert.DeserializeObject<JObject>(!classNameContent.StartsWith("{")
-                        ? "{" + classNameContent + "}"
-                        : classNameContent);
-
-                    
-                    Type entityType = Type.GetType($"Bolgrot.Core.Common.Entity.Data.{className}, Bolgrot.Core.Common", true);
-
-                    foreach (var entity in entities)
-                    {
-                        data.TryAdd(Convert.ToInt32(entity.Key),
-                            JsonConvert.DeserializeObject(entity.Value.ToString(), entityType));
-                    }
-                    
-                    this._logger.Info($"{data.Count} {entityType.Name} entity retrieved.");
-                }
-                catch (Exception ex)
-                {
-                    this._logger.Error(ex.Message);
-                }
-
-                reader.Close();
-            }
-            
             return data;
         }
         

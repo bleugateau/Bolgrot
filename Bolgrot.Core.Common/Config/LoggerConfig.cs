@@ -19,16 +19,15 @@ namespace Bolgrot.Core.Common.Config
 
             var highlightRule = new ConsoleRowHighlightingRule();
             
-            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Info", ConsoleOutputColor.DarkBlue, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Info ->", ConsoleOutputColor.DarkBlue, ConsoleOutputColor.NoChange));
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("[Send]", ConsoleOutputColor.DarkMagenta, ConsoleOutputColor.NoChange));
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("[Receive]", ConsoleOutputColor.DarkCyan, ConsoleOutputColor.NoChange));
-            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Debug", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
-            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Error", ConsoleOutputColor.DarkRed, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Debug ->", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Error ->", ConsoleOutputColor.DarkRed, ConsoleOutputColor.NoChange));
             
             //Rules for mapping loggers to targets            
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, consoleTarget);
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
-
 
             return config;
         }
