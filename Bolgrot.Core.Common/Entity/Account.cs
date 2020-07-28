@@ -5,11 +5,8 @@ using ServiceStack.DataAnnotations;
 
 namespace Bolgrot.Core.Common.Entity
 {
-    public class Account
+    public class Account : AbstractEntity
     {
-        [AutoIncrement]
-        public int Id { get; set; }
-        
         public string Nickname { get; set; }
         
         public string Login { get; set; }

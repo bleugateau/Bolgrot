@@ -14,7 +14,7 @@ namespace Bolgrot.Core.Common.Repository
         Task<Account> GetAccountByLogin(string login);
         Task<Account> GetAccountByApiKey(string apikey);
     }
-    
+
     public class AccountRepository : Repository<Account>, IAccountRepository
     {
         public AccountRepository(IDbConnection databaseManager) : base(databaseManager)
@@ -25,7 +25,7 @@ namespace Bolgrot.Core.Common.Repository
         {
             var keyValue = this.Entities().FirstOrDefault(x => x.Value is Account && x.Value.Login == login);
             Account account = (keyValue.Key == null ? null : keyValue.Value);
-            
+
             if (account == null)
             {
                 this.DatabaseManager.Open();
@@ -42,12 +42,12 @@ namespace Bolgrot.Core.Common.Repository
 
             return account;
         }
-        
+
         public async Task<Account> GetAccountByApiKey(string apikey)
         {
             var keyValue = this.Entities().FirstOrDefault(x => x.Value is Account && x.Value.ApiKey == apikey);
             Account account = (keyValue.Key == null ? null : keyValue.Value);
-            
+
             if (account == null)
             {
                 this.DatabaseManager.Open();

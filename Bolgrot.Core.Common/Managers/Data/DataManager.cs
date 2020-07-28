@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace Bolgrot.Core.Common.Managers.Data
 {
@@ -18,7 +19,7 @@ namespace Bolgrot.Core.Common.Managers.Data
     {
         private ConcurrentDictionary<string, ConcurrentDictionary<int, object>> _data = new ConcurrentDictionary<string, ConcurrentDictionary<int, object>>();
         private bool _isInitialized = false;
-        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public DataManager()
         {
