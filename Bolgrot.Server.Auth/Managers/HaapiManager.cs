@@ -47,6 +47,8 @@ namespace Bolgrot.Server.Auth.Managers
                 editedAccount.ApiKey = Guid.NewGuid().ToString();
                 editedAccount.ApiKeyExpirationDate = DateTime.Now.AddHours(4);
                 editedAccount.Ip = ipAddress;
+                editedAccount.IsEdited = true;
+                
                 return editedAccount;
             });
             
@@ -85,6 +87,7 @@ namespace Bolgrot.Server.Auth.Managers
             this._accountRepository.Entities().AddOrUpdate(account.Id, account, (i, editedAccount) =>
             {
                 editedAccount.Token = Guid.NewGuid().ToString();
+                editedAccount.IsEdited = true;
                 return editedAccount;
             });
 
