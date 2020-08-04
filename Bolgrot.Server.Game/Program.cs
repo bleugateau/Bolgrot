@@ -1,4 +1,6 @@
 ﻿using System;
+using Bolgrot.Core.Common.Config;
+using Bolgrot.Server.Game.Network;
 
 namespace Bolgrot.Server.Game
 {
@@ -6,7 +8,14 @@ namespace Bolgrot.Server.Game
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Bolgrot - Emulator for latest version of Dofus Touch by Ten.");
+            
+            //Apply config           
+            NLog.LogManager.Configuration = LoggerConfig.GetConfig();
+            
+            var httpGameServer = new HttpServer("http://localhost:666");
+            httpGameServer.Start().Wait();
+
         }
     }
 }

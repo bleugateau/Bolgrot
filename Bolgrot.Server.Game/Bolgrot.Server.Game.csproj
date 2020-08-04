@@ -5,4 +5,12 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Bolgrot.Core.Common\Bolgrot.Core.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="EmbedIO" Version="3.4.3" />
+    </ItemGroup>
+
 </Project>
