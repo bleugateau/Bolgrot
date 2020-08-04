@@ -134,7 +134,7 @@ namespace Bolgrot.Core.Common.Managers.Data
                             JsonConvert.DeserializeObject(entity.Value.ToString(), entityType));
                     }
                     
-                    this._logger.Info($"{data.Count} {entityType.Name} data retrieved.");
+                    this._logger.Debug($"{data.Count} {entityType.Name} data retrieved.");
                 }
                 catch (Exception ex)
                 {

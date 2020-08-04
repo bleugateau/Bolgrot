@@ -22,16 +22,10 @@ namespace Bolgrot.Server.Auth.Managers
 
         protected override Task PersistCallback()
         {
-            
-            this._dbConnection.Open();
-            
             this._logger.Debug($"Save in progress...");
-            
-            this.PersistEntities<Account>(this._accountRepository.Entities());
-            this._logger.Debug($"Save account...");
-            
-            this._dbConnection.Close();
-            
+
+            this._accountRepository.PersistEntities();
+
             return base.PersistCallback();
         }
     }
