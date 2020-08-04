@@ -21,7 +21,7 @@ namespace Bolgrot.Server.Auth.Frames
                     return account;
                 });
 
-            client.Send(new SelectedServerDataMessage(serverSelectionMessage.serverId, "127.0.0.1", 666, true, client.Account.Ticket, "http://127.0.0.1:666"));
+            client.Send(new SelectedServerDataMessage(serverSelectionMessage.serverId, "localhost", 666, true, client.Account.Ticket, "http://localhost:666"));
         }
     }
 }
