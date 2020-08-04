@@ -30,7 +30,7 @@ namespace Bolgrot.Core.Common.Repository
             {
                 this.DatabaseManager.Open();
 
-                var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>(x => x.Login == login);
+                var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>(x => x.Login == login && x.DeletedAt == null);
                 if (fetchedAccounts.Count != 0)
                 {
                     account = fetchedAccounts.First();
@@ -52,7 +52,7 @@ namespace Bolgrot.Core.Common.Repository
             {
                 this.DatabaseManager.Open();
 
-                var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>(x => x.ApiKey == apikey);
+                var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>(x => x.ApiKey == apikey && x.DeletedAt == null);
                 if (fetchedAccounts.Count != 0)
                 {
                     account = fetchedAccounts.First();

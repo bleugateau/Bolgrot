@@ -1,11 +1,12 @@
-﻿using ServiceStack.DataAnnotations;
+﻿using System;
+using ServiceStack.DataAnnotations;
 
 namespace Bolgrot.Core.Common.Entity
 {
     public abstract class AbstractEntity
     {
         [AutoIncrement]
-        public int Id { get; set; }
+        public abstract int Id { get; set; }
         
         [Ignore]
         public bool IsNew { get; set; }
@@ -15,5 +16,7 @@ namespace Bolgrot.Core.Common.Entity
         
         [Ignore]
         public bool IsEdited { get; set; }
+        
+        public DateTime? DeletedAt { get; set; }
     }
 }

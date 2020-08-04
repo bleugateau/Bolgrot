@@ -7,6 +7,9 @@ namespace Bolgrot.Core.Common.Entity
 {
     public class Account : AbstractEntity
     {
+        [AutoIncrement]
+        public override int Id { get; set; }
+        
         public string Nickname { get; set; }
         
         public string Login { get; set; }
