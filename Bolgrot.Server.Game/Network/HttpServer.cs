@@ -33,7 +33,7 @@ namespace Bolgrot.Server.Game.Network
         private WebServer CreateWebServer()
         {
             
-            //Logger.UnregisterLogger<ConsoleLogger>();
+            Logger.UnregisterLogger<ConsoleLogger>();
 
             return new WebServer(o => o
                     .WithUrlPrefix(this.Address)

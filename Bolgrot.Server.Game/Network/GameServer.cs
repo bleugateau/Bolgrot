@@ -22,10 +22,7 @@ namespace Bolgrot.Server.Game.Network
             this.Clients.TryAdd(context.Id, client);
 
             SendAsync(context, "0{\"sid\":\"h-Tc6sbvNVUqwrImAL-o\",\"upgrades\":[],\"pingInterval\":25000,\"pingTimeout\":5000}");
-            
-            
-            Console.WriteLine("PROUT");
-            
+
             return Task.CompletedTask;
         }
     }

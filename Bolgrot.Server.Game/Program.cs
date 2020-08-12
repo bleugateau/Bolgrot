@@ -13,6 +13,9 @@ namespace Bolgrot.Server.Game
             //Apply config           
             NLog.LogManager.Configuration = LoggerConfig.GetConfig();
             
+            //initialize
+            Container.Initialize();
+            
             var httpGameServer = new HttpServer("http://localhost:666");
             httpGameServer.Start().Wait();
 
