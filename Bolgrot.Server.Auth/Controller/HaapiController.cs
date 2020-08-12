@@ -71,7 +71,7 @@ namespace Bolgrot.Server.Auth.Controller
 
             string response = await Container.Instance().Resolve<IHaapiManager>().BuildToken(apikey);
             
-            if (response.Length == 0)
+            if (response.Contains("reason"))
             {
                 this.HttpContext.Response.StatusCode = 601;
             }

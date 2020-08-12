@@ -44,8 +44,13 @@ namespace Bolgrot.Server.Auth.Managers
 
             this._accountRepository.Entities().AddOrUpdate(account.Id, account, (i, editedAccount) =>
             {
-                editedAccount.ApiKey = Guid.NewGuid().ToString();
-                editedAccount.ApiKeyExpirationDate = DateTime.Now.AddHours(4);
+                //if expired token or empty
+                if (account.ApiKeyExpirationDate == null || (DateTime) account.ApiKeyExpirationDate <= DateTime.Now)
+                {
+                    editedAccount.ApiKey = Guid.NewGuid().ToString();
+                    editedAccount.ApiKeyExpirationDate = DateTime.Now.AddHours(4);
+                }
+
                 editedAccount.Ip = ipAddress;
                 editedAccount.IsEdited = true;
                 

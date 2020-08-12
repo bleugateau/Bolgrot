@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Autofac;
 using Bolgrot.Core.Ankama.Protocol.Messages;
 using Bolgrot.Core.Ankama.Protocol.SendMessages;
@@ -8,6 +9,7 @@ using Bolgrot.Core.Common.Network;
 using Bolgrot.Core.Common.Repository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ServiceStack.Text;
 
 namespace Bolgrot.Server.Auth.Frames
 {
@@ -49,8 +51,9 @@ namespace Bolgrot.Server.Auth.Frames
             client.Account = account;
             
             client.Send(new CredentialsAcknowledgementMessage());
-            client.Send(new IdentificationSuccessMessage(account.Login, account.Nickname, 141231, 0, true, "DELETE ?", 0, false, 1577995402000, true, "", ""));
-
+            client.Send(new IdentificationSuccessMessage(account.Login, account.Nickname, 141231, 0, true, "DELETE ?", 0, false, account.CreationDate.ToUnixTime(), true, "", ""));
+            
+            
             //do IPC + characters number
             client.Send(new ServersListMessage(new GameServerInformations[]
             {
