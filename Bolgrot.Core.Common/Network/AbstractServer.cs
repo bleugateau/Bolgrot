@@ -22,7 +22,7 @@ namespace Bolgrot.Core.Common.Network
         {
             string message = System.Text.Encoding.UTF8.GetString(buffer);
             
-            this._logger.Info($"[RCV] {message} from {context.Id}.");
+            this._logger.Info($"Receive -> {message} from {context.Id}.");
             
             if (!this.Clients.ContainsKey(context.Id))
                 return null;
@@ -41,7 +41,7 @@ namespace Bolgrot.Core.Common.Network
             
             foreach (var messageInQueue in client.MessagesQueues)
             {
-                this._logger.Info($"[SND] {messageInQueue} to {context.Id}.");
+                this._logger.Info($"Sent -> {messageInQueue} to {context.Id}.");
                 SendAsync(context, messageInQueue.Value);
             }
             

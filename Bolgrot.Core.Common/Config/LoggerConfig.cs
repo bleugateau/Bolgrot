@@ -15,15 +15,15 @@ namespace Bolgrot.Core.Common.Config
 
             var logfile = new NLog.Targets.FileTarget("logfile") {FileName = $"log/{DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Year.ToString()}.txt"};
             var consoleTarget = new ColoredConsoleTarget();
-            consoleTarget.Layout = "${date:format=HH\\:MM\\:ss} | ${LEVEL} -> ${message}"; 
+            consoleTarget.Layout = "${date:format=HH\\:mm\\:ss} | ${callsite-filename:includeSourcePath=false} | [${level:uppercase=true}] : ${message}"; 
 
             var highlightRule = new ConsoleRowHighlightingRule();
             
-            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Info ->", ConsoleOutputColor.DarkBlue, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("[INFO]", ConsoleOutputColor.DarkBlue, ConsoleOutputColor.NoChange));
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("[Send]", ConsoleOutputColor.DarkMagenta, ConsoleOutputColor.NoChange));
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("[Receive]", ConsoleOutputColor.DarkCyan, ConsoleOutputColor.NoChange));
-            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Debug ->", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
-            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("Error ->", ConsoleOutputColor.DarkRed, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("[DEBUG]", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("[ERROR]", ConsoleOutputColor.DarkRed, ConsoleOutputColor.NoChange));
             
             //Rules for mapping loggers to targets            
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, consoleTarget);

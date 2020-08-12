@@ -52,6 +52,7 @@ namespace Bolgrot.Core.Common.Managers.Data
         private void RegisterData()
         {
             this._data.TryAdd("Interactives", new ConcurrentDictionary<int, object>());
+            this._data.TryAdd("Heads", new ConcurrentDictionary<int, object>());
             this._data.TryAdd("AlignmentGift", new ConcurrentDictionary<int, object>());
             this._data.TryAdd("AchievementCategories", new ConcurrentDictionary<int, object>());
             this._data.TryAdd("AlmanaxCalendars", new ConcurrentDictionary<int, object>());
