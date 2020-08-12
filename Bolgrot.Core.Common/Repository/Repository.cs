@@ -16,11 +16,11 @@ namespace Bolgrot.Core.Common.Repository
         public ConcurrentDictionary<int, T> Entities();
         public void PersistEntities();
     }
-    
+
     public abstract class Repository<T> : IRepository<T> where T : AbstractEntity
     {
         protected readonly IDbConnection DatabaseManager;
-        
+
         private ConcurrentDictionary<int, T> _entities = new ConcurrentDictionary<int, T>();
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private bool _isInitialized;
@@ -44,39 +44,49 @@ namespace Bolgrot.Core.Common.Repository
         private async Task Initialize()
         {
             this.DatabaseManager.Open();
-            
-            //if table not exist create it
-            if (!this.DatabaseManager.TableExists<T>())
-            {
-                Console.WriteLine($"{typeof(T).Name.ToLower()} table created.");
-                
-                this.DatabaseManager.CreateTable<T>();
-                this._isInitialized = true;
-                return;
-            }
-            
-            var allEntities = await this.DatabaseManager.SelectAsync<T>(x => x.DeletedAt == null);
 
-            foreach (var entity in allEntities)
+
+            try
             {
-                this._entities.TryAdd(Convert.ToInt32(entity.GetObjectId()), entity);
+                //if table not exist create it
+                if (!this.DatabaseManager.TableExists<T>())
+                {
+                    this._logger.Info($"{typeof(T).Name.ToLower()} table created.");
+
+                    this.DatabaseManager.CreateTable<T>();
+                    this._isInitialized = true;
+                    return;
+                }
+
+
+                var allEntities = await this.DatabaseManager.SelectAsync<T>(x => x.DeletedAt == null);
+
+                foreach (var entity in allEntities)
+                {
+                    this._entities.TryAdd(Convert.ToInt32(entity.GetObjectId()), entity);
+                }
             }
-            
-            
-            Console.WriteLine($"{this._entities.Count} {typeof(T).Name} entity retrieved.");
-            
+
+            catch(Exception ex)
+            {
+                this._logger.Error($"{ex.Message} for {typeof(T).Name}.");
+            }
+
+
+            this._logger.Info($"{this._entities.Count} {typeof(T).Name} entity retrieved.");
+
             this._isInitialized = true;
 
             this.DatabaseManager.Close();
         }
-        
+
         /**
          * Persist edition
          */
         public void PersistEntities()
         {
             this.DatabaseManager.Open();
-            
+
             var editedEntites = this.Entities().Where(x => x.Value.IsEdited || x.Value.IsDeleted).Select(x => x.Value)
                 .ToList();
 
@@ -87,7 +97,7 @@ namespace Bolgrot.Core.Common.Repository
                 if (entity.IsEdited || entity.DeletedAt != null)
                 {
                     this.DatabaseManager.Update<T>(entity);
-                    
+
                     if (entity.IsEdited)
                     {
                         this.Entities().AddOrUpdate(entity.Id, entity, (i, o) =>
@@ -101,15 +111,14 @@ namespace Bolgrot.Core.Common.Repository
                     {
                         this.Entities().TryRemove(entity.Id, out T removedEntity);
                     }
-                    
+
                     continue;
                 }
             }
-            
+
             this._logger.Debug($"Saving {typeof(T).Name} ...");
-            
+
             this.DatabaseManager.Close();
         }
-        
     }
 }

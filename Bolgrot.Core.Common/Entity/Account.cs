@@ -7,7 +7,7 @@ namespace Bolgrot.Core.Common.Entity
 {
     public class Account : AbstractEntity
     {
-        [AutoIncrement]
+        [PrimaryKey, AutoIncrement]
         public override int Id { get; set; }
         
         public string Nickname { get; set; }
@@ -26,5 +26,8 @@ namespace Bolgrot.Core.Common.Entity
         
         [NotNull]
         public DateTime? ApiKeyExpirationDate { get; set; }
+        
+        [Default("CURRENT_TIMESTAMP()")]
+        public DateTime CreationDate { get; set; }
     }
 }

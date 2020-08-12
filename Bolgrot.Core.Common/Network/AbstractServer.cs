@@ -34,6 +34,7 @@ namespace Bolgrot.Core.Common.Network
             if (message.StartsWith("2"))
             {
                 SendAsync(context, "3");
+                this._logger.Info($"Sent -> pong primus protocol.");
             }
             
             FrameIntercepterManager.Intercept(client, message.Substring(1, message.Length - 1));
@@ -41,7 +42,7 @@ namespace Bolgrot.Core.Common.Network
             
             foreach (var messageInQueue in client.MessagesQueues)
             {
-                this._logger.Info($"Sent -> {messageInQueue} to {context.Id}.");
+                this._logger.Info($"Sent -> {messageInQueue.Value} to {context.Id}.");
                 SendAsync(context, messageInQueue.Value);
             }
             

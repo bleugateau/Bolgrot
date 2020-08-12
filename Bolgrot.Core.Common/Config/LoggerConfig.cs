@@ -15,7 +15,7 @@ namespace Bolgrot.Core.Common.Config
 
             var logfile = new NLog.Targets.FileTarget("logfile") {FileName = $"log/{DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Year.ToString()}.txt"};
             var consoleTarget = new ColoredConsoleTarget();
-            consoleTarget.Layout = "${date:format=HH\\:mm\\:ss} | ${callsite-filename:includeSourcePath=false} | [${level:uppercase=true}] : ${message}"; 
+            consoleTarget.Layout = "${date:format=HH\\:mm\\:ss} | ${callsite:className=true:includeNamespace=false:fileName=false:includeSourcePath=false:methodName=true} | [${level:uppercase=true}] : ${message}"; 
 
             var highlightRule = new ConsoleRowHighlightingRule();
             

@@ -1,13 +1,13 @@
-﻿using Bolgrot.Core.Ankama.Protocol.Types;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Bolgrot.Core.Ankama.Protocol.Types;
 using Newtonsoft.Json;
 using ServiceStack.DataAnnotations;
-using Swan.Formatters;
 
 namespace Bolgrot.Core.Common.Entity
 {
     public class Character : AbstractEntity
     {
-        [AutoIncrement]
+        [PrimaryKey, AutoIncrement]
         public override int Id { get; set; }
         
         public int AccountId { get; set; }
@@ -18,6 +18,7 @@ namespace Bolgrot.Core.Common.Entity
         
         public int Breed { get; set; }
         
+        [Column(TypeName = "json")]
         public bool Sex { get; set; }
         
         [StringLength(StringLengthAttribute.MaxText)]
