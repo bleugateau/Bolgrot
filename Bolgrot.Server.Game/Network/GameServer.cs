@@ -16,7 +16,7 @@ namespace Bolgrot.Server.Game.Network
             // Console.WriteLine($"Client {context.Id} connected");
             this._logger.Info($"Client {context.Id} connected");
             
-            var client = new Client(context.Id, context);
+            var client = new GameClient(context.Id, context);
             client.OnDisconnect += DisconnectEventHandler;
             
             this.Clients.TryAdd(context.Id, client);

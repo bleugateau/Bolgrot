@@ -12,14 +12,27 @@ namespace Bolgrot.Server.Game.Managers
     public abstract class AbstractGameManager
     {
         protected readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
+
+        /**
+         * Generate unique id, for new entry in database
+         */
+        protected int GenerateId()
+        {
+            var now = DateTime.Now;
+            
+            this._logger.Debug($"New unique id {((DateTime.MinValue.AddHours(now.Hour).AddMinutes(now.Minute).AddSeconds(now.Second).AddMilliseconds(now.Millisecond)).Ticks / 10000)}");
+            
+            return (int)((DateTime.MinValue.AddHours(now.Hour).AddMinutes(now.Minute).AddSeconds(now.Second).AddMilliseconds(now.Millisecond)).Ticks / 10000);
+        }
         
         /**
          * Load game data from json file
          */
-        protected void LoadGameData<T>(Dictionary<int, T> dataDictionary, string jsonName = "")
+        protected Dictionary<int, T> LoadGameData<T>( string jsonName = "")
         {
             //init dictionary
-            dataDictionary = new Dictionary<int, T>();
+            Dictionary<int, T> gameData = new Dictionary<int, T>();
             
             if (jsonName.IsEmpty())
             {
@@ -35,12 +48,12 @@ namespace Bolgrot.Server.Game.Managers
 
                 foreach (var entity in headsEntities)
                 {
-                    dataDictionary.TryAdd(Convert.ToInt32(entity.Key),
+                    gameData.TryAdd(Convert.ToInt32(entity.Key),
                         JsonConvert.DeserializeObject<T>(entity.Value.ToString()));
                 }
 
 
-                this._logger.Debug($"{dataDictionary.Count} {jsonName.ToLower()} loaded !");
+                this._logger.Debug($"{gameData.Count} {jsonName.ToLower()} loaded !");
             }
             catch (Exception ex)
             {
@@ -49,6 +62,8 @@ namespace Bolgrot.Server.Game.Managers
 
 
             reader.Dispose();
+
+            return gameData;
         }
     }
 }

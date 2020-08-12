@@ -36,24 +36,16 @@ namespace Bolgrot.Server.Game.Frames
             CharactersListRequestMessage charactersListRequestMessage)
         {
 
-
-
             var characters = Container.Instance().Resolve<ICharacterRepository>().Entities().Values.Where(x => x.AccountId == 1);
             List<CharacterBaseInformations> characterBaseInformations = new List<CharacterBaseInformations>();
-
 
             foreach (var character in characters)
             {
                 characterBaseInformations.Add(new CharacterBaseInformations(character.Id, 1, character.Name, character.EntityLook, character.Breed, character.Sex));
             }
             
-
-            // client.Send(new CharactersListMessage(true, new CharacterBaseInformations[]
-            // {
-            //     new CharacterBaseInformations(1, 200, "Ten", new EntityLook(1, new int[]{20, 2030}, new int[]{33536592, 50331596, 53058242, 69935891, 86612674}, new int[]{130}, new SubEntity[] {}), 2, false), 
-            // }));
             
-            client.Send(new CharactersListMessage(true, characterBaseInformations.ToArray()));
+            client.Send(new CharactersListMessage(false, characterBaseInformations.ToArray()));
         }
     }
 }
