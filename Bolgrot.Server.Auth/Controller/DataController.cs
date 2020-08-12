@@ -35,7 +35,7 @@ namespace Bolgrot.Server.Auth.Controller
 
             }
             
-            StreamReader reader = new StreamReader($"datas/dictionary/{dictionaryName}");
+            StreamReader reader = new StreamReader($"data/dictionary/{dictionaryName}");
             string content = reader.ReadToEnd();
             reader.Dispose();
 
@@ -64,10 +64,20 @@ namespace Bolgrot.Server.Auth.Controller
             string requestedPayload = await this.HttpContext.GetRequestBodyAsStringAsync();
             
             var mapDataRequest = JsonConvert.DeserializeObject<MapDataRequest>(requestedPayload);
-            var data = await Container.Instance().Resolve<IDataManager>().GetDataByClassName(mapDataRequest.@class);
+
             
+            if (!File.Exists($"data/map/{mapDataRequest.@class}.json"))
+            {
+                this.HttpContext.SendStringAsync(JsonConvert.SerializeObject("[]"), "application/json", Encoding.Default);
+            }
             
-            await this.HttpContext.SendStringAsync(JsonConvert.SerializeObject(data), "application/json", Encoding.Default);
+            StreamReader reader = new StreamReader($"data/map/{mapDataRequest.@class}.json");
+
+            var data = await reader.ReadToEndAsync();
+            
+            reader.Dispose();
+            
+            await this.HttpContext.SendStringAsync(data, "application/json", Encoding.Default);
         }
     }
 }

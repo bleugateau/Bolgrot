@@ -54,7 +54,7 @@ namespace Bolgrot.Server.Auth.Proxy
                 .WithStaticFolder("/optimus", "primus/", true, m => m
                     .WithContentCaching(true).WithDefaultExtension(".js")
                 )
-                .WithStaticFolder("/", "datas/", true);
+                .WithStaticFolder("/", "data/", true);
         }
     }
 }

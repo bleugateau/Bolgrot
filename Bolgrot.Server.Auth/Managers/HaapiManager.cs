@@ -74,11 +74,19 @@ namespace Bolgrot.Server.Auth.Managers
         public async Task<string> BuildToken(string apiKey)
         {
             var createTokenResponse = new CreateTokenResponse();
+            var createApiFailedResponse = new CreateApiResponseFailed();
             var account = await this._accountRepository.GetAccountByApiKey(apiKey);
             
-            if (account == null || ((DateTime) account.ApiKeyExpirationDate <= DateTime.Now))
+            if (account == null)
             {
-                return "";
+                createApiFailedResponse.Reason = Enum.GetName(typeof(CreateApiFailedEnum), CreateApiFailedEnum.FAILED);
+                return JsonConvert.SerializeObject(createApiFailedResponse);
+            }
+
+            if (((DateTime) account.ApiKeyExpirationDate <= DateTime.Now))
+            {
+                createApiFailedResponse.Reason = Enum.GetName(typeof(CreateApiFailedEnum), CreateApiFailedEnum.NOTOKEN);
+                return JsonConvert.SerializeObject(createApiFailedResponse);
             }
             
             this._logger.Debug($"Token value before edit {account.Token}");

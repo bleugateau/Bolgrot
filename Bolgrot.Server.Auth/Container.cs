@@ -35,9 +35,9 @@ namespace Bolgrot.Server.Auth
                 .SingleInstance();
 
             //managers
-            builder.RegisterType<DataManager>().As<IDataManager>().OnActivating(e => e.Instance.Initialize())
-                .AutoActivate()
-                .SingleInstance();
+            // builder.RegisterType<DataManager>().As<IDataManager>().OnActivating(e => e.Instance.Initialize())
+            //     .AutoActivate()
+            //     .SingleInstance();
             builder.RegisterType<HaapiManager>().As<IHaapiManager>().SingleInstance();
 
             _container = builder.Build();
