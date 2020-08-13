@@ -25,9 +25,9 @@ namespace Bolgrot.Server.Game.Managers
     {
         public Dictionary<int, Heads> HeadsData { get; }
         public Dictionary<int, Breeds> BreedsData { get; }
-
         public Task CreateCharacter(GameClient client, CharacterCreationRequestMessage characterCreationRequestMessage);
         public Task CharacterDeletion(GameClient client, CharacterDeletionRequestMessage characterDeletionRequestMessage);
+        public Task CharacterSelection(GameClient client, int selectedCharacterId);
     }
 
     public class CharacterManager : AbstractGameManager, ICharacterManager
@@ -117,13 +117,8 @@ namespace Bolgrot.Server.Game.Managers
                 skins = new int[] {Convert.ToInt32(head.AssetId.Split("_")[0]), (int)head.Skins},
                 subentities = new SubEntity[] {}
             });
-            
-            //character.IsNew = true; //set isnew
-            
-            //this._characterRepository.Entities().TryAdd(character.Id, character);
-            
+
             this._characterRepository.AddEntity(character);
-            
 
             client.Send(new CharacterCreationResultMessage((int)CharacterCreationResultEnum.OK));
             
@@ -172,6 +167,44 @@ namespace Bolgrot.Server.Game.Managers
             return Task.CompletedTask;
         }
 
+
+        /**
+         * Handle character selection frame
+         */
+        public Task CharacterSelection(GameClient client, int selectedCharacterId)
+        {
+            var character = this._characterRepository.Entities().Values
+                .FirstOrDefault(x => x.Id == selectedCharacterId && x.AccountId == 1); //@TODO ipc
+
+            if (character == null)
+            {
+                client.Send(new CharacterSelectedErrorMessage());
+                return null;
+            }
+
+            client.Character = character;
+            
+            //@TODO
+            client.Send(new TowerOfAscensionResultsMessage(new int[] { })); //???
+            client.Send(new NotificationListMessage(new int[] {2591762}));
+            client.Send(new CharacterSelectedSuccessMessage(character.ToCharacterBaseInformations()));
+            
+            client.Send(new InventoryContentMessage(new ObjectItem[]
+            {
+                new ObjectItem(63, 8545, new ObjectEffectInteger[]{}, 1, 1500 ), 
+                new ObjectItem(63, 8876, new ObjectEffectInteger[]{}, 1, 20 ), 
+            }, 1000));
+            
+            client.Send(new ShortcutBarContentMessage(0, new ShortcutSpell[] {})); //manage two Shortcut type
+            client.Send(new ShortcutBarContentMessage(1, new ShortcutSpell[] {}));
+            
+            client.Send(new EmoteListMessage(new int[] {}));
+            client.Send(new AlignmentRankUpdateMessage(0, false));
+            
+            
+            return Task.CompletedTask;
+        }
+        
         /**
          * Return true if character name is valid
          */

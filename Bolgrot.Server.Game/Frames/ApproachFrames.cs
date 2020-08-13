@@ -19,17 +19,20 @@ namespace Bolgrot.Server.Game.Frames
         {
             ApproachFrames.SendCharactersListMessage(client);
         }
-        
+
         [InterceptFrame("CharacterCreationRequestMessage")]
-        public void CharacterCreationRequestMessageFrame(GameClient client, CharacterCreationRequestMessage characterCreationRequestMessage)
+        public void CharacterCreationRequestMessageFrame(GameClient client,
+            CharacterCreationRequestMessage characterCreationRequestMessage)
         {
             Container.Instance().Resolve<ICharacterManager>().CreateCharacter(client, characterCreationRequestMessage);
         }
 
         [InterceptFrame("CharacterDeletionRequestMessage")]
-        public void CharacterDeletionRequestMessageFrame(GameClient client, CharacterDeletionRequestMessage characterDeletionRequestMessage)
+        public void CharacterDeletionRequestMessageFrame(GameClient client,
+            CharacterDeletionRequestMessage characterDeletionRequestMessage)
         {
-            Container.Instance().Resolve<ICharacterManager>().CharacterDeletion(client, characterDeletionRequestMessage);
+            Container.Instance().Resolve<ICharacterManager>()
+                .CharacterDeletion(client, characterDeletionRequestMessage);
         }
 
 
@@ -37,7 +40,17 @@ namespace Bolgrot.Server.Game.Frames
         public void CharacterSelectionMessageFrame(GameClient client,
             CharacterSelectionMessage characterSelectionMessage)
         {
-            //@TODO
+            Container.Instance().Resolve<ICharacterManager>()
+                .CharacterSelection(client, characterSelectionMessage.id);
+            
+        }
+        
+        [InterceptFrame("CharacterFirstSelectionMessage")]
+        public void CharacterFirstSelectionMessageFrame(GameClient client,
+            CharacterFirstSelectionMessage characterFirstSelectionMessage)
+        {
+            Container.Instance().Resolve<ICharacterManager>()
+                .CharacterSelection(client, characterFirstSelectionMessage.id);
             
         }
 
@@ -46,16 +59,10 @@ namespace Bolgrot.Server.Game.Frames
          */
         public static void SendCharactersListMessage(GameClient client)
         {
-            var characters = Container.Instance().Resolve<ICharacterRepository>().Entities().Values.Where(x => x.AccountId == 1 && !x.IsDeleted);
-            List<CharacterBaseInformations> characterBaseInformations = new List<CharacterBaseInformations>();
+            var characters = Container.Instance().Resolve<ICharacterRepository>().Entities().Values
+                .Where(x => x.AccountId == 1 && !x.IsDeleted);
 
-            foreach (var character in characters)
-            {
-                characterBaseInformations.Add(new CharacterBaseInformations(character.Id, character.Level, character.Name, character.EntityLook, character.Breed, character.Sex));
-            }
-            
-            
-            client.Send(new CharactersListMessage(false, characterBaseInformations.ToArray()));
+            client.Send(new CharactersListMessage(false, characters.Select(x => x.ToCharacterBaseInformations()).ToArray()));
         }
     }
 }
