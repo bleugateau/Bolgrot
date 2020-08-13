@@ -30,22 +30,5 @@ namespace Bolgrot.Server.Game.Frames
             client.Send(new AccountCapabilitiesMessage(141748286, true, 32767, 32767, 0, new int[] {}, new object()));
             client.Send(new TrustStatusMessage(true));
         }
-
-        [InterceptFrame("CharactersListRequestMessage")]
-        public void CharactersListRequestMessageFrame(Client client,
-            CharactersListRequestMessage charactersListRequestMessage)
-        {
-
-            var characters = Container.Instance().Resolve<ICharacterRepository>().Entities().Values.Where(x => x.AccountId == 1);
-            List<CharacterBaseInformations> characterBaseInformations = new List<CharacterBaseInformations>();
-
-            foreach (var character in characters)
-            {
-                characterBaseInformations.Add(new CharacterBaseInformations(character.Id, 1, character.Name, character.EntityLook, character.Breed, character.Sex));
-            }
-            
-            
-            client.Send(new CharactersListMessage(false, characterBaseInformations.ToArray()));
-        }
     }
 }

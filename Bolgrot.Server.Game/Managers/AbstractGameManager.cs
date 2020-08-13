@@ -12,19 +12,6 @@ namespace Bolgrot.Server.Game.Managers
     public abstract class AbstractGameManager
     {
         protected readonly Logger _logger = LogManager.GetCurrentClassLogger();
-
-
-        /**
-         * Generate unique id, for new entry in database
-         */
-        protected int GenerateId()
-        {
-            var now = DateTime.Now;
-            
-            this._logger.Debug($"New unique id {((DateTime.MinValue.AddHours(now.Hour).AddMinutes(now.Minute).AddSeconds(now.Second).AddMilliseconds(now.Millisecond)).Ticks / 10000)}");
-            
-            return (int)((DateTime.MinValue.AddHours(now.Hour).AddMinutes(now.Minute).AddSeconds(now.Second).AddMilliseconds(now.Millisecond)).Ticks / 10000);
-        }
         
         /**
          * Load game data from json file
