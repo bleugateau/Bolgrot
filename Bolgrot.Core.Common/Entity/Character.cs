@@ -27,6 +27,13 @@ namespace Bolgrot.Core.Common.Entity
         [StringLength(StringLengthAttribute.MaxText)]
         public string EntityLookData { get; set; }
 
-        [Ignore] public EntityLook EntityLook => JsonConvert.DeserializeObject<EntityLook>(this.EntityLookData);
+        [Ignore] 
+        public EntityLook EntityLook => JsonConvert.DeserializeObject<EntityLook>(this.EntityLookData);
+        
+        public CharacterBaseInformations ToCharacterBaseInformations()
+        {
+            return new CharacterBaseInformations(this.Id, this.Level,
+                this.Name, this.EntityLook, this.Breed, this.Sex);
+        }
     }
 }
