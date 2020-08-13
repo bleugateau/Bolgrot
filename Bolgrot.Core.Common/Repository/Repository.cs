@@ -87,32 +87,40 @@ namespace Bolgrot.Core.Common.Repository
         {
             this.DatabaseManager.Open();
 
-            var editedEntites = this.Entities().Where(x => x.Value.IsEdited || x.Value.IsDeleted).Select(x => x.Value)
+            var editedEntites = this.Entities().Where(x => x.Value.IsEdited || x.Value.IsNew || x.Value.IsDeleted).Select(x => x.Value)
                 .ToList();
 
             this._logger.Debug($"{editedEntites.Count} {typeof(T).Name} need to be persisted ...");
 
             foreach (var entity in editedEntites)
             {
+                //insert if new entity
+                if (entity.IsNew)
+                {
+                    this.DatabaseManager.Insert<T>(entity);
+                }
+                
+                //update if soft deleted or edited
                 if (entity.IsEdited || entity.DeletedAt != null)
                 {
                     this.DatabaseManager.Update<T>(entity);
 
-                    if (entity.IsEdited)
-                    {
-                        this.Entities().AddOrUpdate(entity.Id, entity, (i, o) =>
-                        {
-                            entity.IsEdited = false;
-                            return o;
-                        });
-                    }
-
                     if (entity.IsDeleted)
                     {
                         this.Entities().TryRemove(entity.Id, out T removedEntity);
+                        continue;
                     }
-
-                    continue;
+                }
+                
+                //set flag IsEdited & IsNew to false
+                if (entity.IsEdited || entity.IsNew)
+                {
+                    this.Entities().AddOrUpdate(entity.Id, entity, (i, o) =>
+                    {
+                        entity.IsEdited = false;
+                        entity.IsNew = false;
+                        return o;
+                    });
                 }
             }
 
