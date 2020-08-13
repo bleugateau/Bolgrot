@@ -23,6 +23,11 @@ namespace Bolgrot.Server.Game
                 new OrmLiteConnection(new OrmLiteConnectionFactory(
                     "Server=localhost;Database=arkanic_world;Uid=root;Pwd=;", MySql55Dialect.Provider)));
 
+            //repository entities persister
+            builder.RegisterType<RepositoryPersistManager>().AsSelf().OnActivating(e => e.Instance.StartPersister())
+                .AutoActivate()
+                .SingleInstance();
+            
             //repository
             builder.RegisterType<CharacterRepository>().As<ICharacterRepository>().SingleInstance();
 
