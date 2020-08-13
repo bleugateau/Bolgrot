@@ -16,7 +16,5 @@ namespace Bolgrot.Core.Common.Entity
         
         [Ignore]
         public bool IsEdited { get; set; }
-        
-        public DateTime? DeletedAt { get; set; }
     }
 }

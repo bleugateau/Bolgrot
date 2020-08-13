@@ -12,13 +12,16 @@ namespace Bolgrot.Core.Common.Entity
         
         public int AccountId { get; set; }
         
+        [Default(1)]
+        public int Level { get; set; }
+        
+        [Default(0)]
         public double Experiences { get; set; }
 
         public string Name { get; set; }
         
         public int Breed { get; set; }
         
-        [Column(TypeName = "json")]
         public bool Sex { get; set; }
         
         [StringLength(StringLengthAttribute.MaxText)]
