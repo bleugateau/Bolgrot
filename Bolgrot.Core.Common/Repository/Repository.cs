@@ -15,8 +15,8 @@ namespace Bolgrot.Core.Common.Repository
     {
         public ConcurrentDictionary<int, T> Entities();
         public void PersistEntities();
-
         public void AddEntity(T entity);
+        public void DeleteEntity(T entity);
     }
 
     public abstract class Repository<T> : IRepository<T> where T : AbstractEntity
@@ -103,6 +103,18 @@ namespace Bolgrot.Core.Common.Repository
             
             entity.IsNew = true;
             this._entities.TryAdd(entity.Id, entity);
+        }
+
+        /**
+         * Delete entity
+         */
+        public void DeleteEntity(T entity)
+        {
+            this._entities.AddOrUpdate(entity.Id, entity, (i, editedEntity) =>
+            {
+                editedEntity.IsDeleted = true;
+                return editedEntity;
+            });
         }
         
         /**

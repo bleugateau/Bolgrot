@@ -9,9 +9,11 @@ using Bolgrot.Core.Ankama.Protocol.Enums;
 using Bolgrot.Core.Ankama.Protocol.Messages;
 using Bolgrot.Core.Ankama.Protocol.SendMessages;
 using Bolgrot.Core.Ankama.Protocol.Types;
+using Bolgrot.Core.Ankama.Protocol.Utils;
 using Bolgrot.Core.Common.Entity;
 using Bolgrot.Core.Common.Entity.Data;
 using Bolgrot.Core.Common.Repository;
+using Bolgrot.Server.Game.Frames;
 using Bolgrot.Server.Game.Network;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -25,6 +27,7 @@ namespace Bolgrot.Server.Game.Managers
         public Dictionary<int, Breeds> BreedsData { get; }
 
         public Task CreateCharacter(GameClient client, CharacterCreationRequestMessage characterCreationRequestMessage);
+        public Task CharacterDeletion(GameClient client, CharacterDeletionRequestMessage characterDeletionRequestMessage);
     }
 
     public class CharacterManager : AbstractGameManager, ICharacterManager
@@ -49,6 +52,9 @@ namespace Bolgrot.Server.Game.Managers
             this.BreedsData = this.LoadGameData<Breeds>();
         }
 
+        /**
+         * Handle character creation frame
+         */
         public Task CreateCharacter(GameClient client, CharacterCreationRequestMessage characterCreationRequestMessage)
         {
             var characterAlreadyExist = this._characterRepository.Entities().Values
@@ -120,7 +126,49 @@ namespace Bolgrot.Server.Game.Managers
             
 
             client.Send(new CharacterCreationResultMessage((int)CharacterCreationResultEnum.OK));
+            
+            ApproachFrames.SendCharactersListMessage(client);
 
+            return Task.CompletedTask;
+        }
+
+        /**
+         * Handle character deletion frame
+         */
+        public Task CharacterDeletion(GameClient client, CharacterDeletionRequestMessage characterDeletionRequestMessage)
+        {
+            var character = this._characterRepository.Entities().Values.FirstOrDefault(x =>
+                x.Id == characterDeletionRequestMessage.characterId && x.AccountId == 1);
+            
+            //check if accountid and characterId are linked
+            if (character == null)
+            {
+                client.Disconnect();
+                return null;
+            }
+            
+            //if level > 20 need valid answer for delete character
+            var exceptedSecretAnswerHash = CryptographyHelper.Md5(character.Id.ToString() + "~000000000000000000");
+
+            if (character.Level >= CharacterManager.CONFIRM_DELETION_LVL)
+            {
+                exceptedSecretAnswerHash = CryptographyHelper.Md5(character.Id.ToString() + "~" + "DELETE"); //@IPC in future
+                if (exceptedSecretAnswerHash == characterDeletionRequestMessage.secretAnswerHash)
+                {
+                    this._characterRepository.DeleteEntity(character);
+                }
+            }
+            else
+            {
+                if (exceptedSecretAnswerHash == characterDeletionRequestMessage.secretAnswerHash)
+                {
+                    this._characterRepository.DeleteEntity(character);
+                }
+            }
+            
+            
+            ApproachFrames.SendCharactersListMessage(client);
+            
             return Task.CompletedTask;
         }
 
@@ -170,8 +218,8 @@ namespace Bolgrot.Server.Game.Managers
                     }
                 }
                 iC++;
-            };
-            
+            }
+
 
             return true;
         }
