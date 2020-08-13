@@ -1,6 +1,6 @@
 namespace Bolgrot.Core.Ankama.Protocol.Types
 {
-    public class ShortcutSpell
+    public class ShortcutSpell : Shortcut
     {
 
 	    public int slot;
