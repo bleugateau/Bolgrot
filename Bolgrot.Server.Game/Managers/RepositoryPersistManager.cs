@@ -9,7 +9,7 @@ namespace Bolgrot.Server.Game.Managers
     {
         private ICharacterRepository _characterRepository;
         
-        public RepositoryPersistManager(IDbConnection connection, ICharacterRepository characterRepository) : base(connection, 1000)
+        public RepositoryPersistManager(IDbConnection connection, ICharacterRepository characterRepository) : base(connection, 80000)
         {
             this._characterRepository = characterRepository;
         }
