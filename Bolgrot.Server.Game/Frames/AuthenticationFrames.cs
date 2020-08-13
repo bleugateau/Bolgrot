@@ -7,6 +7,7 @@ using Bolgrot.Core.Ankama.Protocol.Types;
 using Bolgrot.Core.Common.Managers.Frames;
 using Bolgrot.Core.Common.Network;
 using Bolgrot.Core.Common.Repository;
+using Bolgrot.Server.Game.Network;
 using Newtonsoft.Json.Linq;
 
 namespace Bolgrot.Server.Game.Frames
@@ -18,6 +19,12 @@ namespace Bolgrot.Server.Game.Frames
         {
             client.Send(new ProtocolRequired(1594, 1594));
             client.Send(new HelloGameMessage());
+        }
+
+        [InterceptFrame("BasicPingMessage")]
+        public void BasicPingMessageFrame(GameClient client, BasicPingMessage basicPingMessage)
+        {
+            client.Send(new BasicPongMessage(false));
         }
 
         [InterceptFrame("AuthenticationTicketMessage")]
