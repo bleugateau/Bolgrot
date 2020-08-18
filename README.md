@@ -1,5 +1,6 @@
 ![Bolgrot MMO Framework](https://i.ibb.co/5x8YsZC/fdpn1.png)
-  Bolgrot is reproduction of Dofus Touch official server.
+
+Bolgrot is reproduction of Dofus Touch official server.
   
 ## Screenshots
 
