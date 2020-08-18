@@ -11,4 +11,4 @@ Characters selection:
 ![enter image description here](https://i.ibb.co/bPw4fSR/image.png)
 
 Enter in game:
-![enter image description here](https://i.ibb.co/mD9vtfm/image.png)
+![enter image description here](https://i.ibb.co/JQZ8mDM/image.png)
