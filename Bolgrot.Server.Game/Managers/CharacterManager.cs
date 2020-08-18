@@ -201,6 +201,12 @@ namespace Bolgrot.Server.Game.Managers
             client.Send(new EmoteListMessage(new int[] {}));
             client.Send(new AlignmentRankUpdateMessage(0, false));
             
+            client.Send(new TextInformationMessage(1, 89, new int[] {}, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !" ));
+            client.Send(new TitlesAndOrnamentsListMessage(new int[] {}, new int[] {}, 0, 0));
+            
+            
+            client.Send(new CharacterCapabilitiesMessage(4095)); //guild emblem
+            client.Send(new StartupActionsListMessage(new int[] {})); //startup action = ??
             
             return Task.CompletedTask;
         }
