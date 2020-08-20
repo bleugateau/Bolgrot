@@ -134,7 +134,7 @@ namespace Bolgrot.Core.Common.Repository
             {
                 foreach (var entity in editedEntites)
                 {
-                    if (entity.IsNew || entity.IsDeleted)
+                    if (entity.IsNew || entity.IsEdited)
                     {
                         //insert if new entity
                         if (entity.IsNew)
@@ -149,8 +149,8 @@ namespace Bolgrot.Core.Common.Repository
                         //set flag IsEdited & IsNew to false
                         this.Entities().AddOrUpdate(entity.Id, entity, (i, o) =>
                         {
-                            entity.IsEdited = false;
-                            entity.IsNew = false;
+                            o.IsEdited = false;
+                            o.IsNew = false;
                             return o;
                         });
                     }
