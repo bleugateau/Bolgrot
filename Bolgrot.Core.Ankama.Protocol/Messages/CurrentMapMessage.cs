@@ -9,7 +9,7 @@ namespace Bolgrot.Core.Ankama.Protocol.Messages
     public class CurrentMapMessage : NetworkMessage
     {
 
-	    public int mapId;
+	    public long mapId;
 	    public string mapKey;
 
 
@@ -17,7 +17,7 @@ namespace Bolgrot.Core.Ankama.Protocol.Messages
         {
         }
 
-        public CurrentMapMessage(int mapId, string mapKey)
+        public CurrentMapMessage(long mapId, string mapKey)
         {
             this.mapId = mapId;
             this.mapKey = mapKey;
