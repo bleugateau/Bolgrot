@@ -26,7 +26,7 @@ namespace Bolgrot.Server.Auth
 
             builder.Register<IDbConnection>(c =>
                 new OrmLiteConnection(new OrmLiteConnectionFactory(
-                    "Server=localhost;Database=arkanic_auth;Uid=root;Pwd=;", MySql55Dialect.Provider)));
+                    "Server=localhost;Database=bolgrot_auth;Uid=root;Pwd=;", MySql55Dialect.Provider)));
 
             //repository
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();

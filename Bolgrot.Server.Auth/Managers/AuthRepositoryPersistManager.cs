@@ -15,7 +15,7 @@ namespace Bolgrot.Server.Auth.Managers
     public class AuthRepositoryPersistManager : AbstractRepositoryPersistManager
     {
         private IAccountRepository _accountRepository;
-        public AuthRepositoryPersistManager(IDbConnection connection, IAccountRepository accountRepository) : base(connection, 30000)
+        public AuthRepositoryPersistManager(IDbConnection connection, IAccountRepository accountRepository) : base(connection, 100000)
         {
             this._accountRepository = accountRepository;
         }
