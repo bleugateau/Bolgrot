@@ -16,4 +16,8 @@
       <ProjectReference Include="..\Bolgrot.Core.Ankama.Protocol\Bolgrot.Core.Ankama.Protocol.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Managers\Pathfinding" />
+    </ItemGroup>
+
 </Project>

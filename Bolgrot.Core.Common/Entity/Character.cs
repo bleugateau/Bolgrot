@@ -23,9 +23,13 @@ namespace Bolgrot.Core.Common.Entity
         public int Breed { get; set; }
         
         public bool Sex { get; set; }
-        
+
         [StringLength(StringLengthAttribute.MaxText)]
         public string EntityLookData { get; set; }
+        
+        public long MapId { get; set; }
+        
+        public int CellId { get; set; }
 
         [Ignore] 
         public EntityLook EntityLook => JsonConvert.DeserializeObject<EntityLook>(this.EntityLookData);
