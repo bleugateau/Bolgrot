@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 using Bolgrot.Core.Ankama.Protocol;
 using Bolgrot.Core.Common.Entity;
 using EmbedIO.WebSockets;
@@ -22,6 +23,8 @@ namespace Bolgrot.Core.Common.Network
         public event EventHandler<EventArgs> OnDisconnect;
         
         private long InstanceId = 0;
+        private Timer _primusPingTimer;
+        
         
 
         public Client(string contextId, IWebSocketContext context)
@@ -29,6 +32,13 @@ namespace Bolgrot.Core.Common.Network
             this.ContextId = contextId;
             this.Context = context;
             this.MessagesQueues = new ConcurrentDictionary<long, string>();
+            this._primusPingTimer = new Timer(this.PrimusPing, new AutoResetEvent(false), 5000, 25000);
+        }
+
+        private void PrimusPing(object? state)
+        {
+            this.MessagesQueues.TryAdd(InstanceId, "4\"primus::ping::"+ DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() +"\"");
+            InstanceId++;
         }
 
         public void Send(NetworkMessage message)
