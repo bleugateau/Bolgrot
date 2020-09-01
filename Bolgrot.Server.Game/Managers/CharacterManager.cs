@@ -29,7 +29,7 @@ namespace Bolgrot.Server.Game.Managers
         public Task CharacterDeletion(GameClient client, CharacterDeletionRequestMessage characterDeletionRequestMessage);
         public Task CharacterSelection(GameClient client, int selectedCharacterId);
     }
-
+    
     public class CharacterManager : AbstractGameManager, ICharacterManager
     {
         public Dictionary<int, Heads> HeadsData { get; }
@@ -38,7 +38,7 @@ namespace Bolgrot.Server.Game.Managers
         private static readonly Regex NAME_REGEX = new Regex("^[A-Za-z]{3,20}$", RegexOptions.Compiled);
         private static int MIN_PLAYER_NAME_LENGTH = 2;
         private static int MAX_PLAYER_NAME_LENGTH = 20;
-        private static int CONFIRM_DELETION_LVL = 20; //from client
+        private static int CONFIRM_DELETION_LVL = 20;
         
         private ICharacterRepository _characterRepository;
 
@@ -107,6 +107,8 @@ namespace Bolgrot.Server.Game.Managers
             character.Breed = characterCreationRequestMessage.breed;
             character.Sex = characterCreationRequestMessage.sex;
             character.Level = 200; //from config
+            character.MapId = 81266690;
+            character.CellId = 298;
             character.Experiences = 0;
             character.Name = characterCreationRequestMessage.name;
             character.EntityLookData = JsonConvert.SerializeObject(new EntityLook()

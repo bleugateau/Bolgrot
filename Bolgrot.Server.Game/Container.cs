@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Autofac;
 using Bolgrot.Core.Common.Managers.Data;
+using Bolgrot.Core.Common.Managers.Pathfinding;
 using Bolgrot.Core.Common.Repository;
 using Bolgrot.Server.Game.Managers;
 using ServiceStack.OrmLite;
@@ -21,7 +22,7 @@ namespace Bolgrot.Server.Game
 
             builder.Register<IDbConnection>(c =>
                 new OrmLiteConnection(new OrmLiteConnectionFactory(
-                    "Server=localhost;Database=arkanic_world;Uid=root;Pwd=;", MySql55Dialect.Provider)));
+                    "Server=localhost;Database=arkanic_game;Uid=root;Pwd=;", MySql55Dialect.Provider)));
 
             //repository entities persister
             builder.RegisterType<RepositoryPersistManager>().AsSelf().OnActivating(e => e.Instance.StartPersister())
@@ -31,9 +32,19 @@ namespace Bolgrot.Server.Game
             //repository
             builder.RegisterType<CharacterRepository>().As<ICharacterRepository>().SingleInstance();
 
-            //managers
-            builder.RegisterType<CharacterManager>().As<ICharacterManager>()
-                // .OnActivating(e => e.Instance.Initialize())
+            /* MANAGER */
+            
+            //character
+             builder.RegisterType<CharacterManager>().As<ICharacterManager>()
+                            .AutoActivate()
+                            .SingleInstance();
+             
+            //map
+            builder.RegisterType<PathfinderManager>().As<IPathfinderManager>()
+                .AutoActivate()
+                .SingleInstance();
+            
+            builder.RegisterType<MapManager>().As<IMapManager>()
                 .AutoActivate()
                 .SingleInstance();
 
