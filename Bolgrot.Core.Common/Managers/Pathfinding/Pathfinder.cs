@@ -15,6 +15,8 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
             bool stopNextToTarget = false);
 
         public List<Cell> DecompressKeyMovements(Map map, int[] keyMovements);
+
+        public int GetOppositeCellId(Map map, int cellId);
     }
 
     public class PathfinderManager : IPathfinderManager
@@ -32,7 +34,7 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
 
         public Dictionary<int, CellPathData[]> Grid = new Dictionary<int, CellPathData[]>();
 
-        public List<CellChangeMap> CellChangeMaps = new List<CellChangeMap>();
+        //public List<CellChangeMap> CellChangeMaps = new List<CellChangeMap>();
 
         public Dictionary<string, int> MapPointToCellId = new Dictionary<string, int>();
 
@@ -57,7 +59,7 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
             constructMapPoints();
         }
 
-        
+
         private OrientationEnum getChangeMapFlags(Map map, int cellId)
         {
             var mapChangeData = map.Cells[cellId].C;
@@ -81,7 +83,7 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
 
             return OrientationEnum.NONE;
         }
-        
+
         public List<Cell> DecompressKeyMovements(Map map, int[] keyMovements)
         {
             var decompressedCells = new List<Cell>();
@@ -94,17 +96,72 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
 
             return decompressedCells;
         }
-        
+
+        /**
+         * Get opposite cell Id
+         */
+        public int GetOppositeCellId(Map map, int cellId)
+        {
+
+            Cell oppositeCell = null;
+            int oppositeCellId = 0;
+            
+            if (cellId % 14 == 0)
+            {
+                oppositeCellId = (cellId + 13);
+            }
+            else if ((cellId + 1) % 14 == 0)
+            {
+                oppositeCellId = (cellId - 13);
+            }
+            else if (cellId < 28)
+            {
+                oppositeCellId = (cellId + 532);
+            }
+            else if (cellId > 531)
+            {
+                oppositeCellId = (cellId - 532);
+            }
+
+            if (map.Cells.FirstOrDefault(x => x.IsWalkable() && x.Id == cellId) == null)
+            {
+                //need to find nearest cell
+                var nearestCell = FindNearestCellFromCellId(map, oppositeCellId);
+
+                if (nearestCell != null)
+                {
+                    oppositeCellId = nearestCell.Id;
+                }
+            }
+
+            return oppositeCellId;
+        }
+
+        private Cell FindNearestCellFromCellId(Map map, int cellId)
+        {
+            int nearestDistance = -1;
+            Cell nearestDistanceCell = null;
+            
+            foreach (var cell in map.Cells.ToList().Where(x => x.IsWalkable()))
+            {
+                var distance = (int)this.getDistance(cellId, cell.Id);
+                if (nearestDistance == -1 || (distance < nearestDistance))
+                {
+                    nearestDistanceCell = cell;
+                    nearestDistance = distance;
+                }
+            }
+
+            return null;
+        }
+
         public Task<int[]> GetPath(Map map, int startCellId, int destCellId, List<int> occupiedCells,
             bool allowDiagonals = false,
             bool stopNextToTarget = false)
         {
             CellPath candidate = null;
 
-
-            this.CellChangeMaps.Clear();
-
-            fillPathGrid(map);
+            fillPathGrid(map, map.CellChangeMaps.Count == 0);
 
             var srcPos = getMapPoint(startCellId); // source index
             var dstPos = getMapPoint(destCellId); // source index
@@ -346,7 +403,7 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
             return compressedPath;
         }
 
-        private void fillPathGrid(Map map)
+        private void fillPathGrid(Map map, bool fillCellsChangeMap = false)
         {
             firstCellZone = map.Cells[0].Z;
             oldMovementSystem = true;
@@ -368,11 +425,16 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
                     row[j] = updateCellPath(cell, cellPath);
 
 
+                    if (!fillCellsChangeMap)
+                    {
+                        continue;
+                    }
+
                     var changeMapFlag = getChangeMapFlags(map, cellId);
 
                     if (changeMapFlag != OrientationEnum.NONE)
                     {
-                        this.CellChangeMaps.Add(new CellChangeMap(cellId, changeMapFlag));
+                        map.CellChangeMaps.Add(new CellChangeMap(cellId, changeMapFlag));
                     }
                 }
 

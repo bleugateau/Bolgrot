@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bolgrot.Core.Common.Managers.Pathfinding;
 using Newtonsoft.Json;
 
 namespace Bolgrot.Core.Common.Entity.Data
@@ -31,6 +32,9 @@ namespace Bolgrot.Core.Common.Entity.Data
 
         [JsonProperty("atlasLayout")] 
         public AtlasLayout AtlasLayout { get; set; }
+        
+        [JsonIgnore]
+        public List<CellChangeMap> CellChangeMaps = new List<CellChangeMap>();
     }
 
     public partial class AtlasLayout
