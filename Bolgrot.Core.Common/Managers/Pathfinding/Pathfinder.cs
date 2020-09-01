@@ -102,8 +102,6 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
          */
         public int GetOppositeCellId(Map map, int cellId)
         {
-
-            Cell oppositeCell = null;
             int oppositeCellId = 0;
             
             if (cellId % 14 == 0)
