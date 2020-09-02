@@ -1,11 +1,6 @@
-﻿using System;
-using System.Linq;
-using Autofac;
-using Bolgrot.Core.Ankama.Protocol.Enums;
+﻿using Autofac;
 using Bolgrot.Core.Ankama.Protocol.Messages;
 using Bolgrot.Core.Ankama.Protocol.SendMessages;
-using Bolgrot.Core.Ankama.Protocol.Types;
-using Bolgrot.Core.Common.Entity.Data;
 using Bolgrot.Core.Common.Managers.Frames;
 using Bolgrot.Server.Game.Managers;
 using Bolgrot.Server.Game.Network;
@@ -33,8 +28,7 @@ namespace Bolgrot.Server.Game.Frames
         {
             Container.Instance().Resolve<IMapManager>().GameMapMovement(client, gameMapMovementRequestMessage);
         }
-
-
+        
         [InterceptFrame("ChangeMapMessage")]
         public void ChangeMapMessage(GameClient client, ChangeMapMessage changeMapMessage)
         {

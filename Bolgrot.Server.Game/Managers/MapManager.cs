@@ -10,6 +10,7 @@ using Bolgrot.Core.Ankama.Protocol.Enums;
 using Bolgrot.Core.Ankama.Protocol.Messages;
 using Bolgrot.Core.Ankama.Protocol.SendMessages;
 using Bolgrot.Core.Ankama.Protocol.Types;
+using Bolgrot.Core.Common.Entity;
 using Bolgrot.Core.Common.Entity.Data;
 using Bolgrot.Core.Common.Managers.Pathfinding;
 using Bolgrot.Core.Common.Repository;
@@ -77,15 +78,19 @@ namespace Bolgrot.Server.Game.Managers
             client.Send(new GameMapMovementMessage(paths, client.Character.Id));
             client.Send(new BasicNoOperationMessage());
             client.Character.CellId = paths[paths.Length - 1];
+            
+            
+            //update
+            this._characterRepository.UpdateEntity(client.Character.Id, client.Character);
 
 
-            this._characterRepository.Entities().AddOrUpdate(client.Character.Id, client.Character,
-                (i, editedCharacter) =>
-                {
-                    editedCharacter.CellId = client.Character.CellId;
-                    editedCharacter.IsEdited = true;
-                    return editedCharacter;
-                });
+            // this._characterRepository.Entities().AddOrUpdate(client.Character.Id, client.Character,
+            //     (i, editedCharacter) =>
+            //     {
+            //         editedCharacter.CellId = client.Character.CellId;
+            //         editedCharacter.IsEdited = true;
+            //         return editedCharacter;
+            //     });
         }
         
         
@@ -101,7 +106,7 @@ namespace Bolgrot.Server.Game.Managers
                 return;
             }
 
-            client.Send(new MapComplementaryInformationsDataMessage(440, map.Id, new int[] {},  new GameRolePlayCharacterInformations[]
+            client.Send(new MapComplementaryInformationsDataMessage(778, map.Id, new int[] {},  new GameRolePlayCharacterInformations[]
             {
                 new GameRolePlayCharacterInformations(client.Character.Id, client.Character.EntityLook, new EntityDispositionInformations(client.Character.CellId,1), client.Character.Name, new HumanInformations(), 1, new ActorAlignmentInformations(0,0,0,3956606) ), 
             }, new int[] {},  new int[] {}, new int[] {},new int[]{}));
@@ -153,6 +158,12 @@ namespace Bolgrot.Server.Game.Managers
             client.Character.CellId =
                 this._pathfinderManager.GetOppositeCellId(mapDestination, client.Character.CellId);
             client.Send(new CurrentMapMessage(client.Character.MapId, "649ae451ca33ec53bbcbcc33becf15f4"));
+            
+            map.Characters.Remove(client.Character.Id, out Character removedCharacter);
+            mapDestination.Characters.TryAdd(client.Character.Id, client.Character);
+            
+            //update
+            this._characterRepository.UpdateEntity(client.Character.Id, client.Character);
         }
         
         

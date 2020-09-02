@@ -18,6 +18,7 @@ namespace Bolgrot.Server.Game.Network
             
             var client = new GameClient(context.Id, context);
             client.OnDisconnect += DisconnectEventHandler;
+            client.SendMessage += SendMessageEventHandler;
             
             this.Clients.TryAdd(context.Id, client);
 

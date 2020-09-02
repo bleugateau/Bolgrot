@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Bolgrot.Core.Common.Managers.Pathfinding;
 using Newtonsoft.Json;
 
@@ -35,6 +36,9 @@ namespace Bolgrot.Core.Common.Entity.Data
         
         [JsonIgnore]
         public List<CellChangeMap> CellChangeMaps = new List<CellChangeMap>();
+        
+        [JsonIgnore]
+        public ConcurrentDictionary<int, Character> Characters = new ConcurrentDictionary<int, Character>();
     }
 
     public partial class AtlasLayout
