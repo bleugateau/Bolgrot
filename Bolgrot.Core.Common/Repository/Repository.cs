@@ -16,6 +16,7 @@ namespace Bolgrot.Core.Common.Repository
         public ConcurrentDictionary<int, T> Entities();
         public void PersistEntities();
         public void AddEntity(T entity);
+        public void UpdateEntity(int key, T entity);
         public void DeleteEntity(T entity);
     }
 
@@ -103,6 +104,27 @@ namespace Bolgrot.Core.Common.Repository
             
             entity.IsNew = true;
             this._entities.TryAdd(entity.Id, entity);
+        }
+        
+        
+        /**
+         * Update entity
+         */
+        public void UpdateEntity(int key, T entity)
+        {
+            //retrieve entity by key
+            this._entities.TryGetValue(key, out T baseEntity);
+            
+            if (baseEntity != null)
+            {
+                this._entities.AddOrUpdate(key, baseEntity, (i, editedEntity) =>
+                {
+                    editedEntity = entity;
+                    editedEntity.IsEdited = true;
+                    
+                    return editedEntity;
+                });
+            }
         }
 
         /**
