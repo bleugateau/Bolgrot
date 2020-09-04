@@ -7,65 +7,53 @@ namespace Bolgrot.Core.Common.Entity.Data
 {
     public partial class Map
     {
-        [JsonProperty("id")] 
-        public long Id { get; set; }
+        public static int[] ZAAP_GFX_ID = {15363, 38003};
+        
+        public static int BLE_GFX_ID = 660;
 
-        [JsonProperty("topNeighbourId")] 
-        public long TopNeighbourId { get; set; }
+        [JsonProperty("id")] public long Id { get; set; }
 
-        [JsonProperty("bottomNeighbourId")] 
-        public long BottomNeighbourId { get; set; }
+        [JsonProperty("topNeighbourId")] public long TopNeighbourId { get; set; }
 
-        [JsonProperty("leftNeighbourId")] 
-        public long LeftNeighbourId { get; set; }
+        [JsonProperty("bottomNeighbourId")] public long BottomNeighbourId { get; set; }
 
-        [JsonProperty("rightNeighbourId")] 
-        public long RightNeighbourId { get; set; }
+        [JsonProperty("leftNeighbourId")] public long LeftNeighbourId { get; set; }
+
+        [JsonProperty("rightNeighbourId")] public long RightNeighbourId { get; set; }
 
         [JsonProperty("shadowBonusOnEntities")]
         public long ShadowBonusOnEntities { get; set; }
 
-        [JsonProperty("cells")] 
-        public Cell[] Cells { get; set; }
+        [JsonProperty("cells")] public Cell[] Cells { get; set; }
 
-        [JsonProperty("midgroundLayer")] 
-        public Dictionary<string, MidgroundLayer[]> MidgroundLayer { get; set; }
+        [JsonProperty("midgroundLayer")] public Dictionary<string, MidgroundLayer[]> MidgroundLayer { get; set; }
 
-        [JsonProperty("atlasLayout")] 
-        public AtlasLayout AtlasLayout { get; set; }
-        
-        [JsonIgnore]
-        public List<CellChangeMap> CellChangeMaps = new List<CellChangeMap>();
-        
+        [JsonProperty("atlasLayout")] public AtlasLayout AtlasLayout { get; set; }
+
+        [JsonIgnore] public List<CellChangeMap> CellChangeMaps = new List<CellChangeMap>();
+
         [JsonIgnore]
         public ConcurrentDictionary<int, Character> Characters = new ConcurrentDictionary<int, Character>();
     }
 
     public partial class AtlasLayout
     {
-        [JsonProperty("width")] 
-        public long Width { get; set; }
+        [JsonProperty("width")] public long Width { get; set; }
 
-        [JsonProperty("height")] 
-        public long Height { get; set; }
+        [JsonProperty("height")] public long Height { get; set; }
 
-        [JsonProperty("graphicsPositions")] 
-        public Dictionary<string, GraphicsPosition> GraphicsPositions { get; set; }
+        [JsonProperty("graphicsPositions")] public Dictionary<string, GraphicsPosition> GraphicsPositions { get; set; }
     }
 
     public partial class GraphicsPosition
     {
-        [JsonProperty("sx")] 
-        public long Sx { get; set; }
+        [JsonProperty("sx")] public long Sx { get; set; }
 
-        [JsonProperty("sy")] 
-        public long Sy { get; set; }
+        [JsonProperty("sy")] public long Sy { get; set; }
 
-        [JsonProperty("sw")] 
-        public long Sw { get; set; }
+        [JsonProperty("sw")] public long Sw { get; set; }
 
-        [JsonProperty("sh")] 
-        public long Sh { get; set; }
+        [JsonProperty("sh")] public long Sh { get; set; }
 
         [JsonProperty("cx", NullValueHandling = NullValueHandling.Ignore)]
         public long? Cx { get; set; }
@@ -82,24 +70,23 @@ namespace Bolgrot.Core.Common.Entity.Data
 
     public partial class Cell
     {
-        [JsonProperty("id")] 
-        public int Id { get; set; }
+        [JsonProperty("id")] public int Id { get; set; }
 
         [JsonProperty("l", NullValueHandling = NullValueHandling.Ignore)]
         public int L { get; set; }
 
         [JsonProperty("f", NullValueHandling = NullValueHandling.Ignore)]
         public int F { get; set; }
-        
+
         [JsonProperty("c", NullValueHandling = NullValueHandling.Ignore)]
         public int C { get; set; }
-        
+
         [JsonProperty("z", NullValueHandling = NullValueHandling.Ignore)]
         public int Z { get; set; }
-        
+
         [JsonProperty("s", NullValueHandling = NullValueHandling.Ignore)]
         public int S { get; set; }
-        
+
         public bool IsWalkable(bool isFightMode = false)
         {
             var mask = isFightMode ? 5 : 1;
@@ -111,6 +98,8 @@ namespace Bolgrot.Core.Common.Entity.Data
     {
         [JsonProperty("g", NullValueHandling = NullValueHandling.Ignore)]
         public long? G { get; set; }
+
+        [JsonProperty("id")] public long? Id { get; set; }
 
         [JsonProperty("x")] public long X { get; set; }
 
@@ -148,6 +137,4 @@ namespace Bolgrot.Core.Common.Entity.Data
         [JsonProperty("astc", NullValueHandling = NullValueHandling.Ignore)]
         public long? Astc { get; set; }
     }
-    
-    
 }

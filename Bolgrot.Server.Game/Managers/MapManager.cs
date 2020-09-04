@@ -106,10 +106,44 @@ namespace Bolgrot.Server.Game.Managers
                 return;
             }
 
+
+            var layers = map.MidgroundLayer
+                .Where(x => x.Value.FirstOrDefault(midLayer => midLayer.Id != null) != null)
+                .ToList();
+
+            List<InteractiveElement> interactiveElements = new List<InteractiveElement>();
+            List<StatedElement> statedElements = new List<StatedElement>();
+            
+            foreach (var layer in layers)
+            {
+                foreach (var cell in layer.Value.Where(x => x.Id != null))
+                {
+                    if (Map.ZAAP_GFX_ID.Contains(Convert.ToInt32(cell.G)))
+                    {
+                        interactiveElements.Add(new InteractiveElement((int)cell.Id, 16, new InteractiveElementSkill[]
+                        {
+                            new InteractiveElementSkill(114, 53040312, 0, "Utiliser", 1, 1, "Base"),
+                            new InteractiveElementSkill(44, 53040310, 0, "Sauvegarder", 1, 1, "Base"),
+                        }, new InteractiveElementSkill[]{}, "Zaap"));
+                    }
+                    else
+                    {
+                        //statedElements
+                        statedElements.Add(new StatedElement((int)cell.Id, Convert.ToInt32(layer.Key), 0));
+                        
+                        interactiveElements.Add(new InteractiveElement((int)cell.Id, 38, new InteractiveElementSkill[]
+                        {
+                            new InteractiveElementSkill(45, 53040310, 4, "Faucher", 1, 1, "Faucher"),
+                        }, new InteractiveElementSkill[]{}, "Blé"));
+                    }
+                }
+            }
+
+
             client.Send(new MapComplementaryInformationsDataMessage(778, map.Id, new int[] {},  new GameRolePlayCharacterInformations[]
             {
                 new GameRolePlayCharacterInformations(client.Character.Id, client.Character.EntityLook, new EntityDispositionInformations(client.Character.CellId,1), client.Character.Name, new HumanInformations(), 1, new ActorAlignmentInformations(0,0,0,3956606) ), 
-            }, new int[] {},  new int[] {}, new int[] {},new int[]{}));
+            }, interactiveElements.ToArray(),  statedElements.ToArray(), new int[] {},new int[]{}));
         }
         
         /**
