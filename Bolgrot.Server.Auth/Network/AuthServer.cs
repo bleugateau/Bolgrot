@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Bolgrot.Core.Common.Network;
+using Bolgrot.Core.Common.Network.Events;
 using EmbedIO.WebSockets;
 
 namespace Bolgrot.Server.Auth.Network
@@ -18,6 +19,7 @@ namespace Bolgrot.Server.Auth.Network
             
             var client = new Client(context.Id, context);
             client.OnDisconnect += DisconnectEventHandler;
+            client.SendMessage += SendMessageEventHandler;
             
             this.Clients.TryAdd(context.Id, client);
 

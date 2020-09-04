@@ -34,6 +34,8 @@ namespace Bolgrot.Core.Common.Network
             this.ContextId = contextId;
             this.Context = context;
             this.MessagesQueues = new ConcurrentDictionary<long, string>();
+            
+            //fix
             this._primusPingTimer = new Timer(this.PrimusPing, new AutoResetEvent(false), 5000, 25000);
         }
 
@@ -61,6 +63,8 @@ namespace Bolgrot.Core.Common.Network
         public void Disconnect()
         {
             this.OnDisconnect(this, EventArgs.Empty);
+
+            this._primusPingTimer.Dispose();
         }
     }
 }
