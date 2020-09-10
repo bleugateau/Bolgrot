@@ -82,7 +82,7 @@ namespace Bolgrot.Core.Common.Managers.Frames
             {
                 var message = JsonConvert.DeserializeObject<JObject>(messageData);
 
-                if(message.TryGetValue("call", out JToken callType))
+                if(message != null && message.TryGetValue("call", out JToken callType))
                 {
                     switch(callType.ToString())
                     {

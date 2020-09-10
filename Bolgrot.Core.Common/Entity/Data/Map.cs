@@ -34,6 +34,8 @@ namespace Bolgrot.Core.Common.Entity.Data
 
         [JsonIgnore]
         public ConcurrentDictionary<int, Character> Characters = new ConcurrentDictionary<int, Character>();
+        
+        public List<NpcSpawn> NpcSpawns = new List<NpcSpawn>();
     }
 
     public partial class AtlasLayout

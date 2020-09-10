@@ -33,6 +33,7 @@ namespace Bolgrot.Core.Common.Repository
         public Repository(IDbConnection databaseManager)
         {
             this.DatabaseManager = databaseManager;
+            this.Initialize();
         }
 
         public ConcurrentDictionary<int, T> Entities()

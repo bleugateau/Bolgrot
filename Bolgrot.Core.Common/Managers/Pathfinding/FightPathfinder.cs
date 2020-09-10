@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Bolgrot.Core.Ankama.Protocol.Data;
 using Bolgrot.Core.Common.Entity.Data;
 
 namespace Bolgrot.Core.Common.Managers.Pathfinding

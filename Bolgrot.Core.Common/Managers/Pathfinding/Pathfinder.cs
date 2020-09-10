@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using Bolgrot.Core.Ankama.Protocol.Data;
 using Bolgrot.Core.Ankama.Protocol.Enums;
 using Bolgrot.Core.Common.Entity.Data;
 
