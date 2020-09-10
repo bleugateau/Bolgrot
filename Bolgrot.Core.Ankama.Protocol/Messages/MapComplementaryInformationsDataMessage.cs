@@ -13,7 +13,7 @@ namespace Bolgrot.Core.Ankama.Protocol.Messages
 	    public int subAreaId;
 	    public long mapId;
 	    public int[] houses;
-	    public GameRolePlayCharacterInformations[] actors;
+	    public GameRolePlayInformations[] actors;
 	    public InteractiveElement[] interactiveElements;
 	    public StatedElement[] statedElements;
 	    public int[] obstacles;
@@ -24,7 +24,7 @@ namespace Bolgrot.Core.Ankama.Protocol.Messages
         {
         }
 
-        public MapComplementaryInformationsDataMessage(int subAreaId, long mapId, int[] houses, GameRolePlayCharacterInformations[] actors, InteractiveElement[] interactiveElements, StatedElement[] statedElements, int[] obstacles, int[] fights)
+        public MapComplementaryInformationsDataMessage(int subAreaId, long mapId, int[] houses, GameRolePlayInformations[] actors, InteractiveElement[] interactiveElements, StatedElement[] statedElements, int[] obstacles, int[] fights)
         {
             this.subAreaId = subAreaId;
             this.mapId = mapId;

@@ -1,6 +1,6 @@
 namespace Bolgrot.Core.Ankama.Protocol.Types
 {
-    public class GameRolePlayCharacterInformations
+    public class GameRolePlayCharacterInformations : GameRolePlayInformations
     {
 
 	    public int contextualId;
