@@ -39,7 +39,7 @@ namespace Bolgrot.Server.Auth.Controller
         }
 
         
-        [Route(HttpVerbs.Post, "/haapi/Api/CreateApiKey")]
+        [Route(HttpVerbs.Post, "/haapi/Ankama/v5/Api/CreateApiKey")]
         public async Task CreateApiKey()
         {
             string requestedPayload = await this.HttpContext.GetRequestBodyAsStringAsync();
@@ -58,7 +58,7 @@ namespace Bolgrot.Server.Auth.Controller
             await this.HttpContext.SendStringAsync(response, "application/json", Encoding.Default);
         }
         
-        [EmbedIO.Routing.Route(HttpVerbs.Get, "/haapi/Account/CreateToken")]
+        [EmbedIO.Routing.Route(HttpVerbs.Get, "/haapi/Ankama/v5/Account/CreateToken")]
         public async Task CreateToken()
         {
             

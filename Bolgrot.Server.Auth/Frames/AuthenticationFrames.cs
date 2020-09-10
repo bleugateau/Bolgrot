@@ -43,6 +43,7 @@ namespace Bolgrot.Server.Auth.Frames
             if (account == null || account.Token != loginMessage.token)
             {
                 client.Send(new AuthenticationTicketRefusedMessage());
+                client.Disconnect();
                 return;
             }
             
