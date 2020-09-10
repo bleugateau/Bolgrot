@@ -31,14 +31,10 @@ namespace Bolgrot.Server.Game
             
             //repository
             builder.RegisterType<CharacterRepository>().As<ICharacterRepository>().SingleInstance();
+            builder.RegisterType<NpcSpawnRepository>().As<INpcSpawnRepository>().SingleInstance();
 
             /* MANAGER */
             
-            //character
-             builder.RegisterType<CharacterManager>().As<ICharacterManager>()
-                            .AutoActivate()
-                            .SingleInstance();
-             
             //map
             builder.RegisterType<PathfinderManager>().As<IPathfinderManager>()
                 .AutoActivate()
@@ -47,7 +43,18 @@ namespace Bolgrot.Server.Game
             builder.RegisterType<MapManager>().As<IMapManager>()
                 .AutoActivate()
                 .SingleInstance();
+            
+            //npc
+            builder.RegisterType<NpcManager>().As<INpcManager>()
+                .AutoActivate()
+                .SingleInstance();
 
+            
+            //character
+            builder.RegisterType<CharacterManager>().As<ICharacterManager>()
+                .AutoActivate()
+                .SingleInstance();
+            
             _container = builder.Build();
         }
 

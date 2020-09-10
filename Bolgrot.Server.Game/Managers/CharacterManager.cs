@@ -5,13 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Bolgrot.Core.Ankama.Protocol.Data;
 using Bolgrot.Core.Ankama.Protocol.Enums;
 using Bolgrot.Core.Ankama.Protocol.Messages;
 using Bolgrot.Core.Ankama.Protocol.SendMessages;
 using Bolgrot.Core.Ankama.Protocol.Types;
 using Bolgrot.Core.Ankama.Protocol.Utils;
 using Bolgrot.Core.Common.Entity;
-using Bolgrot.Core.Common.Entity.Data;
 using Bolgrot.Core.Common.Repository;
 using Bolgrot.Server.Game.Frames;
 using Bolgrot.Server.Game.Network;
@@ -41,10 +41,12 @@ namespace Bolgrot.Server.Game.Managers
         private static int CONFIRM_DELETION_LVL = 20;
         
         private ICharacterRepository _characterRepository;
+        private IMapManager _mapManager;
 
-        public CharacterManager(ICharacterRepository characterRepository)
+        public CharacterManager(ICharacterRepository characterRepository, IMapManager mapManager)
         {
             this._characterRepository = characterRepository;
+            this._mapManager = mapManager;
 
             this._logger.Info("CharacterManager loading...");
             
@@ -173,7 +175,7 @@ namespace Bolgrot.Server.Game.Managers
         /**
          * Handle character selection frame
          */
-        public Task CharacterSelection(GameClient client, int selectedCharacterId)
+        public async Task CharacterSelection(GameClient client, int selectedCharacterId)
         {
             var character = this._characterRepository.Entities().Values
                 .FirstOrDefault(x => x.Id == selectedCharacterId && x.AccountId == 1); //@TODO ipc
@@ -181,12 +183,21 @@ namespace Bolgrot.Server.Game.Managers
             if (character == null)
             {
                 client.Send(new CharacterSelectedErrorMessage());
-                return null;
+                return;
+            }
+            
+            var map = await this._mapManager.GetMapById(character.MapId);
+            if (map == null)
+            {
+                client.Send(new CharacterSelectedErrorMessage());
+                return;
             }
 
             client.Character = character;
-            
-            //@TODO
+
+            //add character to map
+            map.Characters.TryAdd(client.Character.Id, client.Character);
+
             client.Send(new TowerOfAscensionResultsMessage(new int[] { })); //???
             client.Send(new NotificationListMessage(new int[] {2591762}));
             client.Send(new CharacterSelectedSuccessMessage(character.ToCharacterBaseInformations()));
@@ -206,11 +217,8 @@ namespace Bolgrot.Server.Game.Managers
             client.Send(new TextInformationMessage(1, 89, new int[] {}, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !" ));
             client.Send(new TitlesAndOrnamentsListMessage(new int[] {}, new int[] {}, 0, 0));
             
-            
             client.Send(new CharacterCapabilitiesMessage(4095)); //guild emblem
             client.Send(new StartupActionsListMessage(new int[] {})); //startup action = ??
-            
-            return Task.CompletedTask;
         }
         
         /**
