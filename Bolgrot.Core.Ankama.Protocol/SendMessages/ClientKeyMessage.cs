@@ -6,19 +6,21 @@ using System.Threading.Tasks;
 
 namespace Bolgrot.Core.Ankama.Protocol.SendMessages
 {
-    public class ClientKeyMessage : CallNetworkMessage
+    public class ChatClientMultiMessage : CallNetworkMessage
     {
 
-	    public string key;
+	    public string content;
+        public int channel;
 
 
-        public ClientKeyMessage()
+        public ChatClientMultiMessage()
         {
         }
 
-        public ClientKeyMessage(string key)
+        public ChatClientMultiMessage(string content,int channel)
         {
-            this.key = key;
+            this.content = content;
+            this.channel = channel;
 
         }
     }

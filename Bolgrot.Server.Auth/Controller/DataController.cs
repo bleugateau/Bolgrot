@@ -50,7 +50,7 @@ namespace Bolgrot.Server.Auth.Controller
             var staticDataVersion = this.HttpContext.GetRequestQueryData().Get("staticDataVersion");
             var assetsVersionsJson = new JObject();
 
-            assetsVersionsJson["assetsVersion"] = assetsVersion.ToString();
+            assetsVersionsJson["assetsVersion"] = "5";//assetsVersion.ToString();
             assetsVersionsJson["staticDataVersion"] = staticDataVersion.ToString();
             assetsVersionsJson["changedFiles"] = new JArray(new string[]{ });
             

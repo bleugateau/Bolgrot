@@ -25,7 +25,7 @@ namespace Bolgrot.Server.Auth.Proxy
             
             using (var server = this.CreateWebServer())
             {
-                // Once we've registered our modules and configured them, we call the RunAsync() method.
+                // Once we've registered our modules and configured them, we call the RunAsync() method.          
                 server.RunAsync();
                 Console.ReadKey(true);
             }
@@ -40,7 +40,7 @@ namespace Bolgrot.Server.Auth.Proxy
 
             return new WebServer(o => o
                     .WithUrlPrefix(this.ProxyUrl)
-                    .WithMode(HttpListenerMode.Microsoft)
+                    .WithMode(HttpListenerMode.EmbedIO)                    
                 )
                 .WithLocalSessionManager()
                 .WithWebApi("/api", m => m
@@ -49,12 +49,29 @@ namespace Bolgrot.Server.Auth.Proxy
                 )
                 .WithWebApi("/haapi", m => m
                     .WithController<CmsController>()
-                )
+                    .WithController<HaapiController>()
+                )                
                 .WithModule(new AuthServer("/primus/"))
                 .WithStaticFolder("/optimus", "primus/", true, m => m
-                    .WithContentCaching(true).WithDefaultExtension(".js")
-                )
-                .WithStaticFolder("/", "data/", true);
+                   .WithContentCaching(true).WithDefaultExtension(".js")
+                )                //.HandleUnhandledException(DataResponseForHandleUnhandledException)
+                    //.WithWebApi("/primus", m => m
+                    //.WithController<AuthController>()
+                //)
+                .WithStaticFolder("/", "data/", true)
+               .HandleHttpException(DataResponseForHttpException).HandleUnhandledException(DataResponseForHandleUnhandledException)
+                ;
         }
+        public static Task DataResponseForHttpException(IHttpContext context, IHttpException httpException)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+            return ResponseSerializer.Json(context, httpException.Message);
+        }
+        public static Task DataResponseForHandleUnhandledException(IHttpContext context, Exception exception)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK; 
+            return ResponseSerializer.Json(context, exception.Message);
+        }
+
     }
 }

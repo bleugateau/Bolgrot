@@ -42,7 +42,7 @@ namespace Bolgrot.Tools.MITM.Network
                 if (message.Contains("SelectedServerDataMessage"))
                 {
                     var messageObject = JsonConvert.DeserializeObject<JObject>(message.Substring(1, message.Length - 1));
-                    messageObject["_access"] = "http://localhost:446";
+                    messageObject["_access"] = "http://localhost:667";
                     
                     message = "4"+JsonConvert.SerializeObject(messageObject);
                 }

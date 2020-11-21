@@ -19,16 +19,24 @@ namespace Bolgrot.Server.Auth.Frames
         [InterceptCall("connecting")]
         public void ConnectingCallFrame(Client client, JObject message)
         {
-            client.Send(new ProtocolRequired(1594, 1594));
+            client.Send(new ProtocolRequired(1594, 1554));
             client.Send(new HelloConnectMessage("kbgvrb5aYZa&udoTr&~z3JACZDKTe&.F", new int[] { }));
+            //var connectingMessage = JsonConvert.DeserializeObject<ConnectingMessage>(message["data"].ToString());
+            //client.Language = connectingMessage.language;
         }
-        
+
         [InterceptCall("disconnecting")]
         public void DisconnectingCallFrame(Client client, JObject message)
         {
             client.Disconnect();
         }
-        
+        [InterceptCall("reconnecting")]
+        public void ReConnectingCallFrame(Client client, JObject message)
+        {
+            client.Send(new sessionReconnected());
+            client.Disconnect();
+        }
+
         [InterceptCall("login")]
         public async Task LoginCallFrame(Client client, JObject message)
         {

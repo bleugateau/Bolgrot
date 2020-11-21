@@ -26,10 +26,10 @@ namespace Bolgrot.Tools.MITM
 
             this.dataGridView1.Sort(this.dataGridView1.Columns[0], ListSortDirection.Descending);
             
-            var server = CreateWebServer("http://localhost:440/", ClientTypeEnum.AUTH);
+            var server = CreateWebServer("http://localhost:3000/", ClientTypeEnum.AUTH);
             server.RunAsync();
 
-            var worldServer = CreateWebServer("http://localhost:446/", ClientTypeEnum.WORLD);
+            var worldServer = CreateWebServer("http://localhost:667/", ClientTypeEnum.WORLD);
             worldServer.RunAsync();
 
             this.recordButton.Enabled = !Record;
@@ -76,12 +76,24 @@ namespace Bolgrot.Tools.MITM
             var server = new WebServer(o => o
                     .WithUrlPrefix(url)
                     .WithMode(HttpListenerMode.EmbedIO))
-                .WithModule(new WebSocketPrimusServer("/primus/", clientTypeEnum, this));
+                .WithModule(new WebSocketPrimusServer("/primus/", clientTypeEnum, this))
+               .WithStaticFolder("/", "data/", false);
+               // .HandleHttpException(DataResponseForHttpException).HandleUnhandledException(DataResponseForHandleUnhandledException);
 
             // Listen for state changes.
             server.StateChanged += (s, e) => $"WebServer New State - {e.NewState}".Info();
 
             return server;
+        }
+        public static Task DataResponseForHttpException(IHttpContext context, IHttpException httpException)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+            return ResponseSerializer.Json(context, httpException.Message);
+        }
+        public static Task DataResponseForHandleUnhandledException(IHttpContext context, Exception exception)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+            return ResponseSerializer.Json(context, exception.Message);
         }
 
         private void recordButton_Click(object sender, EventArgs e)

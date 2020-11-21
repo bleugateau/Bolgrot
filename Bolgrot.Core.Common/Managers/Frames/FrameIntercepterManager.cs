@@ -113,8 +113,14 @@ namespace Bolgrot.Core.Common.Managers.Frames
                                 messageContent = data["data"].ToString();
                             }
 
-
+                            if (client.Account == null && messageType != null && messageType.Name != null && messageType.Name != "AuthenticationTicketMessage")
+                            {
+                                //client.Disconnect();
+                                return;
+                            }
+                                
                             frame.Method.Invoke(frame.Instance, new object[] { client, JsonConvert.DeserializeObject(messageContent, messageType) });
+                            //TODO: FIND the ticket in account db on TCP
                             break;
                         default:
                             
@@ -123,7 +129,8 @@ namespace Bolgrot.Core.Common.Managers.Frames
                             var call = callsHandlers.FirstOrDefault(x => x.MessageType == callType.ToString());
                             if (call == null)
                                 return;
-
+                            //if(client.Account == null)
+                            //    return;
                             call.Method.Invoke(call.Instance, new object[] { client, message });
 
                             break;

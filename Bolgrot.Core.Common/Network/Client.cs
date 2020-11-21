@@ -18,7 +18,9 @@ namespace Bolgrot.Core.Common.Network
         public IWebSocketContext Context {get;}
         
         public Account Account { get; set; }
-        
+
+        public string Language { get; set; }
+
         public ConcurrentDictionary<long, string> MessagesQueues { get; }
 
         public event EventHandler<EventArgs> OnDisconnect;

@@ -105,7 +105,7 @@ namespace Bolgrot.Server.Game.Managers
 
             var character = new Character();
             //character.Id = this.GenerateId();
-            character.AccountId = 1;
+            character.AccountId = client.Account.Id;
             character.Breed = characterCreationRequestMessage.breed;
             character.Sex = characterCreationRequestMessage.sex;
             character.Level = 200; //from config
@@ -178,7 +178,7 @@ namespace Bolgrot.Server.Game.Managers
         public async Task CharacterSelection(GameClient client, int selectedCharacterId)
         {
             var character = this._characterRepository.Entities().Values
-                .FirstOrDefault(x => x.Id == selectedCharacterId && x.AccountId == 1); //@TODO ipc
+                .FirstOrDefault(x => x.Id == selectedCharacterId && x.AccountId == client.Account.Id); //@TODO ipc
 
             if (character == null)
             {
@@ -213,12 +213,25 @@ namespace Bolgrot.Server.Game.Managers
             
             client.Send(new EmoteListMessage(new int[] {}));
             client.Send(new AlignmentRankUpdateMessage(0, false));
-            
-            client.Send(new TextInformationMessage(1, 89, new int[] {}, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !" ));
+            switch (client.Language)
+            {
+                case "fr":
+                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
+                    break;
+                case "pt":
+                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bem-vindo ao <b>Bolgrot</b>, servidor em versão BETA desenvolvido por Ten !"));
+                    break;
+                case "es":
+                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
+                    break;
+                default:
+                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
+                    break;
+            }            
             client.Send(new TitlesAndOrnamentsListMessage(new int[] {}, new int[] {}, 0, 0));
             
             client.Send(new CharacterCapabilitiesMessage(4095)); //guild emblem
-            client.Send(new StartupActionsListMessage(new int[] {})); //startup action = ??
+            client.Send(new StartupActionsListMessage(new int[] {})); //startup action = ?? gift i think
         }
         
         /**
