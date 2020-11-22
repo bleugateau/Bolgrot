@@ -199,7 +199,7 @@ namespace Bolgrot.Server.Game.Managers
             map.Characters.TryAdd(client.Character.Id, client.Character);
 
             client.Send(new TowerOfAscensionResultsMessage(new int[] { })); //???
-            client.Send(new NotificationListMessage(new int[] {2591762}));
+            client.Send(new NotificationListMessage(new int[] {2591762, 196626 }));
             client.Send(new CharacterSelectedSuccessMessage(character.ToCharacterBaseInformations()));
             
             client.Send(new InventoryContentMessage(new ObjectItem[]
@@ -213,6 +213,12 @@ namespace Bolgrot.Server.Game.Managers
             
             client.Send(new EmoteListMessage(new int[] {}));
             client.Send(new AlignmentRankUpdateMessage(0, false));
+
+
+            client.Send(new EnabledChannelsMessage(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 9, 10 }, new int[] { 8 }));
+
+            client.Send(new SequenceNumberRequestMessage());
+
             switch (client.Language)
             {
                 case "fr":
@@ -227,13 +233,25 @@ namespace Bolgrot.Server.Game.Managers
                 default:
                     client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
                     break;
-            }            
-            client.Send(new TitlesAndOrnamentsListMessage(new int[] {}, new int[] {}, 0, 0));
-            
+            }
+
+            client.Send(new TitlesAndOrnamentsListMessage(new int[] { }, new int[] { }, 0, 0));
+
+            client.Send(new SpouseStatusMessage(false));
+            client.Send(new AchievementListMessage(new int[] { }, new int[] { }, new AchievementAccount[] { }, new int[] { }, new { points="4" ,  achievementsTotal="1064"  }));
+            client.Send(new GameRolePlayArenaUpdatePlayerInfosMessage(1,0,0,0,0));
             client.Send(new CharacterCapabilitiesMessage(4095)); //guild emblem
+            client.Send(new AlmanachCalendarDateMessage(69, "Jeffarctor"));
+            client.Send(new MailStatusMessage(0, 0));            
             client.Send(new StartupActionsListMessage(new int[] {})); //startup action = ?? gift i think
+            client.Send(new QuestListMessage(new int[] { }, new int[] { }, new int[] { }));
+            //setShopDetailsSuccess skip 
+            client.Send(new FriendsListMessage(new int[] { }));
+            client.Send(new IgnoredListMessage(new int[] { }));
+            
+
         }
-        
+
         /**
          * Return true if character name is valid
          */

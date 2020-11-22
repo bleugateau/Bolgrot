@@ -11,11 +11,24 @@ namespace Bolgrot.Server.Game.Frames
     class ChatManagerFrames
     {
         protected readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        //0 General
+        //1 Team
+        //2 Guild
+        //3 Alliance 
+        //4 Group
+        //5 Trade
+        //6 Recruiment
+        //7 Newbiew
+        //8 Administrator
+        //9 Private
+        //10 Information
+        //12 Promotional
+        //13 Koliseu
+        // Ps: 11 dont exist?!
 
         [InterceptFrame("ChatClientMultiMessage")]
         public void ChatClientMultiMessageFrame(GameClient client, ChatClientMultiMessage chatClientMultiMessage)
         {
-            //chatClientMultiMessage
             this._logger.Info($"Char {client.Character.Name} said {chatClientMultiMessage.content} in {chatClientMultiMessage.channel}");
             //client.Send(new FriendsListMessage(new int[] { }));
             if (chatClientMultiMessage.content.StartsWith("."))
@@ -32,7 +45,6 @@ namespace Bolgrot.Server.Game.Frames
                         if (map == null)
                         {
                             client.Disconnect();
-                            //return;
                             break;
                         }
                         foreach (var othersClients in Container.Instance().Resolve<IWorldManager>().GetNearestClientsFromCharacter(client.Character))
@@ -40,19 +52,13 @@ namespace Bolgrot.Server.Game.Frames
 
                         client.Send(new ChatServerMessage(0, chatClientMultiMessage.content, new int[0],0, "", client.Character.Id, client.Character.Name, client.Character.AccountId));
                         break;
-                    //case ChatChannelsMultiEnum.CHANNEL_GUILD:
-                    //    if (client.ActiveCharacter.Guild != null)
-                    //    {
-                    //        foreach (var othersClient in WorldManager.Instance.worldClients.FindAll(x => x.ActiveCharacter != null && x.ActiveCharacter.Id != client.ActiveCharacter.Id && x.ActiveCharacter.Guild.Id == client.ActiveCharacter.Guild.Id))
-                    //            othersClient.SendPacket(new ChatServerMessage((uint)ChatChannelsMultiEnum.CHANNEL_GUILD, chatClientMultiMessage.content, 0, client.ActiveCharacter.Name, client.ActiveCharacter.Id, client.ActiveCharacter.Name, "", (uint)client.Account.Id));
-
-                    //        client.SendPacket(new ChatServerMessage((uint)ChatChannelsMultiEnum.CHANNEL_GUILD, chatClientMultiMessage.content, 0, client.ActiveCharacter.Name, client.ActiveCharacter.Id, client.ActiveCharacter.Name, "", (uint)client.Account.Id));
-                    //    }
-                    //    else
-                    //        client.SendPacket(new ChatErrorMessage((uint)ChatErrorEnum.CHAT_ERROR_NO_GUILD));
-                    //    break;
                 }
             }
         }
+        //[InterceptFrame("ChatClientPrivateMessage")]
+        //public void ChatClientPrivateMessageFrame(GameClient client, ChatClientPrivateMessage chatClientMultiMessage)
+        //{ 
+        
+        //}
     }
 }
