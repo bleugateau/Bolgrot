@@ -66,8 +66,10 @@ namespace Bolgrot.Core.Common.Managers.Frames
                 object objInstance = Activator.CreateInstance(type);
                 if (messages.ContainsKey(type.Name.ToString()))
                     continue;
-
-                messages.Add(type.Name.ToString(), objInstance.GetType());
+                if (!messages.ContainsKey(type.Name.ToString()))
+                    messages.Add(type.Name.ToString(), objInstance.GetType());
+                else
+                    throw new Exception("messages ambiguous");
             }
         }
         

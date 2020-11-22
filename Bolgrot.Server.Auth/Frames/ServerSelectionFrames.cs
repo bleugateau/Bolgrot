@@ -27,6 +27,8 @@ namespace Bolgrot.Server.Auth.Frames
             //lock (obj)
             Container.Instance().Resolve<AuthRepositoryPersistManager>().ForceSave();
             client.Send(new SelectedServerDataMessage(serverSelectionMessage.serverId, "localhost", 666, true, client.Account.Ticket, "http://localhost:666"));
+
+            
         }
     }
 }

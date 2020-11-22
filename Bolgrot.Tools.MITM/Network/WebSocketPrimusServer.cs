@@ -77,7 +77,7 @@ namespace Bolgrot.Tools.MITM.Network
             var client = new DetourClient(context.Id,
                 this.ClientType == ClientTypeEnum.AUTH
                     ? "proxyconnection.touch.dofus.com"//"localhost:3001"//
-                    : "oshimogameproxy.touch.dofus.com"//"localhost:666"//
+                    : "grandapangameproxy.touch.dofus.com"//"oshimogameproxy.touch.dofus.com"//"localhost:666"//
                     );
             client.ThresholdReached += EventCallback;
             this.DetourClients.TryAdd(context.Id, client);

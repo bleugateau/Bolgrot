@@ -67,8 +67,8 @@ namespace Bolgrot.Tools.MITM
                 $"{Enum.GetName(typeof(ClientTypeEnum), clientTypeEnum)}",
                 message
             })));
-            
-            this.dataGridView1.Invoke(new Action(() => dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.RowCount-1));
+            if(this.checkBox1.Checked)
+                this.dataGridView1.Invoke(new Action(() => dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.RowCount-1));
         }
         
         private WebServer CreateWebServer(string url, ClientTypeEnum clientTypeEnum)
@@ -110,6 +110,20 @@ namespace Bolgrot.Tools.MITM
             
             this.stopRecordingButton.Enabled = false;
             this.recordButton.Enabled = true;
+        }
+
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            foreach (DataGridViewCell cell in this.dataGridView1.SelectedCells)
+            {
+                this.richTextBox1.Text += cell.Value.ToString()+ "\r\n";
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            this.richTextBox1.Text = "";
         }
     }
 }
