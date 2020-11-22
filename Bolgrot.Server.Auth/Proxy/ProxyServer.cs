@@ -43,7 +43,6 @@ namespace Bolgrot.Server.Auth.Proxy
                     .WithMode(HttpListenerMode.EmbedIO)                    
                 )
                 .WithLocalSessionManager()
-                .WithCors()
                 .WithWebApi("/api", m => m
                     .WithController<DataController>()
                     .WithController<HaapiController>()

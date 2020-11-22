@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using Bolgrot.Core.Ankama.Protocol.Messages;
@@ -7,6 +8,7 @@ using Bolgrot.Core.Ankama.Protocol.Types;
 using Bolgrot.Core.Common.Managers.Frames;
 using Bolgrot.Core.Common.Network;
 using Bolgrot.Core.Common.Repository;
+using Bolgrot.Server.Auth.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ServiceStack.Text;
@@ -42,8 +44,8 @@ namespace Bolgrot.Server.Auth.Frames
         {
             if (!message.ContainsKey("data"))
                 return;
-            
-            
+
+
             var loginMessage = JsonConvert.DeserializeObject<LoginMessage>(message["data"].ToString());
 
             var account = await Container.Instance().Resolve<IAccountRepository>().GetAccountByLogin(loginMessage.username);
@@ -54,20 +56,27 @@ namespace Bolgrot.Server.Auth.Frames
                 client.Disconnect();
                 return;
             }
-            
+
             //check for already connected
-            
+
             client.Account = account;
-            
+
             client.Send(new CredentialsAcknowledgementMessage());
             client.Send(new IdentificationSuccessMessage(account.Login, account.Nickname, 141231, 0, true, "DELETE ?", 0, false, account.CreationDate.ToUnixTime(), true, "", ""));
-            
-            
+
+
             //do IPC + characters number
-            client.Send(new ServersListMessage(new GameServerInformations[]
+            ;
+            List<GameServerInformations> server_inf = new List<GameServerInformations>();
+            foreach (var server in Container.Instance().Resolve<IWorldServerManager>().Servers())
             {
-                new GameServerInformations(405, 3, 0, true, 1, 1583348790936, "Bolgrot", 0)
-            }));
+                server_inf.Add(new GameServerInformations(server.Id, server.Status, server.Completion, server.ServerSelectable, server.CharsCount, server.CreationDate.ToUnixTime(), server.Name, server.Type));
+            }
+            client.Send(new ServersListMessage(server_inf.ToArray()));
+            //client.Send(new ServersListMessage(new GameServerInformations[]
+            //{
+            //    new GameServerInformations(405, 3, 0, true, 1, 1583348790936, "Bolgrot", 0)
+            //}));
         }
     }
 }
