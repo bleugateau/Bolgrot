@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Autofac;
 using Bolgrot.Core.Ankama.Protocol.Data;
 using Bolgrot.Core.Ankama.Protocol.Enums;
 using Bolgrot.Core.Ankama.Protocol.Messages;
@@ -218,22 +219,23 @@ namespace Bolgrot.Server.Game.Managers
             client.Send(new EnabledChannelsMessage(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 9, 10 }, new int[] { 8 }));
 
             client.Send(new SequenceNumberRequestMessage());
-
-            switch (client.Language)
-            {
-                case "fr":
-                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
-                    break;
-                case "pt":
-                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bem-vindo ao <b>Bolgrot</b>, servidor em versão BETA desenvolvido por Ten !"));
-                    break;
-                case "es":
-                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
-                    break;
-                default:
-                    client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
-                    break;
-            }
+            
+            client.Send(new TextInformationMessage(1, 89, new int[] { }, Container.Instance().Resolve<ILangManager>().GetLang(1, client.Language)));
+            //switch (client.Language)
+            //{
+            //    case "fr":
+            //        client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
+            //        break;
+            //    case "pt":
+            //        client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bem-vindo ao <b>Bolgrot</b>, servidor em versão BETA desenvolvido por Ten !"));
+            //        break;
+            //    case "es":
+            //        client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
+            //        break;
+            //    default:
+            //        client.Send(new TextInformationMessage(1, 89, new int[] { }, "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !"));
+            //        break;
+            //}
 
             client.Send(new TitlesAndOrnamentsListMessage(new int[] { }, new int[] { }, 0, 0));
 

@@ -43,6 +43,7 @@ namespace Bolgrot.Server.Auth.Proxy
                     .WithMode(HttpListenerMode.EmbedIO)                    
                 )
                 .WithLocalSessionManager()
+                .WithCors()
                 .WithWebApi("/api", m => m
                     .WithController<DataController>()
                     .WithController<HaapiController>()
@@ -51,14 +52,10 @@ namespace Bolgrot.Server.Auth.Proxy
                     .WithController<CmsController>()
                     .WithController<HaapiController>()
                 )                
+                .WithStaticFolder("/primus/primus.js", "data/primus.js", true, m => m.WithContentCaching(true).WithDefaultExtension(".js"))
                 .WithModule(new AuthServer("/primus/"))
-                .WithStaticFolder("/optimus", "primus/", true, m => m
-                   .WithContentCaching(true).WithDefaultExtension(".js")
-                )                //.HandleUnhandledException(DataResponseForHandleUnhandledException)
-                    //.WithWebApi("/primus", m => m
-                    //.WithController<AuthController>()
-                //)
-                .WithStaticFolder("/", "data/", true)
+             //   .WithStaticFolder("/primus/", "data/", false, m => m.WithContentCaching(true).WithDefaultExtension(".js"))  
+                .WithStaticFolder("/", "data/", true, m => m.WithContentCaching(true).WithDefaultExtension(".json"))
                .HandleHttpException(DataResponseForHttpException).HandleUnhandledException(DataResponseForHandleUnhandledException)
                 ;
         }

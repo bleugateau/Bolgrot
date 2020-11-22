@@ -61,6 +61,9 @@ namespace Bolgrot.Server.Game
             builder.RegisterType<WorldManager>().As<IWorldManager>().OnActivating(e => e.Instance.Initialize())
                .AutoActivate()
                .SingleInstance();
+            builder.RegisterType<LangManager>().As<ILangManager>().OnActivating(e => e.Instance.Initialize())
+               .AutoActivate()
+               .SingleInstance();
 
             //builder.RegisterType<AuthenticationManager>().As<IAuthenticationManager>().OnActivating(e => e.Instance.Initialize())
             //   //.AutoActivate()
