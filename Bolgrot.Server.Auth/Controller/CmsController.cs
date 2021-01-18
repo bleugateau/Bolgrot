@@ -36,5 +36,6 @@ namespace Bolgrot.Server.Auth.Controller
             //
             // await this.HttpContext.SendStringAsync(JsonConvert.SerializeObject(news, Formatting.Indented), "json", Encoding.Default);
         }
+        ///Almanax/GetEvent
     }
 }

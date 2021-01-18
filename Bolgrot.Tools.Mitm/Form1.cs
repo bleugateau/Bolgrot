@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bolgrot.Tools.MITM.Network;
 using EmbedIO;
+using EmbedIO.Files;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Swan.Logging;
@@ -26,7 +27,7 @@ namespace Bolgrot.Tools.MITM
 
             this.dataGridView1.Sort(this.dataGridView1.Columns[0], ListSortDirection.Descending);
             
-            var server = CreateWebServer("http://localhost:3000/", ClientTypeEnum.AUTH);
+            var server = CreateWebServer("http://localhost:3001/", ClientTypeEnum.AUTH);
             server.RunAsync();
 
             var worldServer = CreateWebServer("http://localhost:667/", ClientTypeEnum.WORLD);
@@ -76,6 +77,8 @@ namespace Bolgrot.Tools.MITM
             var server = new WebServer(o => o
                     .WithUrlPrefix(url)
                     .WithMode(HttpListenerMode.EmbedIO))
+                .WithCors()
+                .WithStaticFolder("/primus/primus.js", "data/primus.js", true, m => m.WithContentCaching(true).WithDefaultExtension(".js"))
                 .WithModule(new WebSocketPrimusServer("/primus/", clientTypeEnum, this))
                .WithStaticFolder("/", "data/", false);
                // .HandleHttpException(DataResponseForHttpException).HandleUnhandledException(DataResponseForHandleUnhandledException);

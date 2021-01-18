@@ -50,6 +50,7 @@ namespace Bolgrot.Core.Common.Network
             eventArgs.message = "4\"primus::ping::"+ DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() +"\"";
             this.SendMessage(this, eventArgs);
         }
+        //(context, "4{\"_messageType\":\"BasicAckMessage\",\"seq\":1,\"lastPacketId\":1,\"_isInitialized\":true}");
 
         public void Send(NetworkMessage message)
         {

@@ -68,7 +68,7 @@ namespace Bolgrot.Server.Game
             //builder.RegisterType<AuthenticationManager>().As<IAuthenticationManager>().OnActivating(e => e.Instance.Initialize())
             //   //.AutoActivate()
             //   .SingleInstance();
-            builder.RegisterType<AuthenticationManager>().As<IAuthenticationManager>().SingleInstance();
+            //builder.RegisterType<AuthenticationManager>().As<IAuthenticationManager>().SingleInstance();
 
 
 

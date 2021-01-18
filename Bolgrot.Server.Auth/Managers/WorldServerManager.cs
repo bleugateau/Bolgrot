@@ -28,6 +28,7 @@ namespace Bolgrot.Server.Auth.Managers
             WorldServers = this._worldRepository.Entities().Values;
         }
 
+
         public System.Collections.Generic.ICollection<WorldServer> Servers()
         {
             return WorldServers;

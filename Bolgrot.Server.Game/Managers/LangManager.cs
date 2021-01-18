@@ -51,7 +51,8 @@ namespace Bolgrot.Server.Game.Managers
             // en/fr/es/pt
             this.Words = new Dictionary<int, string[]>{
                 { 0, new string[]{"","","","" } },
-                { 1, new string[]{ "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !", "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !", "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !", "Bem-vindo ao <b>Bolgrot</b>, servidor em versão BETA desenvolvido por Ten !" } },
+                { 1, new string[]{"Saiki", "Saiki", "Saiki", "Saiki" } },
+                { 2, new string[]{ "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !", "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !", "Bienvenue sur <b>Bolgrot</b>, serveur en version BETA développé par Ten !", "Bem-vindo ao <b>Bolgrot</b>, servidor em versão BETA desenvolvido por Ten !" } },
             };
             //todo
         }

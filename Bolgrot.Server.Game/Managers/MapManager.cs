@@ -171,7 +171,7 @@ namespace Bolgrot.Server.Game.Managers
                 }
             }
             
-            client.Send(new MapComplementaryInformationsDataMessage(778, map.Id, new int[] { }, actors.ToArray(),
+            client.Send(new MapComplementaryInformationsDataMessage(445, map.Id, new int[] { }, actors.ToArray(),
                 interactiveElements.ToArray(), statedElements.ToArray(), new int[] { }, new int[] { }));
             Enter(client.Character);
         }

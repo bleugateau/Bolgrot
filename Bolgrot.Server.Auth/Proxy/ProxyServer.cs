@@ -20,6 +20,7 @@ namespace Bolgrot.Server.Auth.Proxy
             this.ProxyUrl = address;
         }
 
+
         public Task Start()
         {
             
@@ -36,12 +37,13 @@ namespace Bolgrot.Server.Auth.Proxy
         private WebServer CreateWebServer()
         {
             
-            Logger.UnregisterLogger<ConsoleLogger>();
+            Logger.UnregisterLogger<ConsoleLogger>();           
 
             return new WebServer(o => o
                     .WithUrlPrefix(this.ProxyUrl)
                     .WithMode(HttpListenerMode.EmbedIO)                    
                 )
+                .WithCors()
                 .WithLocalSessionManager()
                 .WithWebApi("/api", m => m
                     .WithController<DataController>()
@@ -50,7 +52,10 @@ namespace Bolgrot.Server.Auth.Proxy
                 .WithWebApi("/haapi", m => m
                     .WithController<CmsController>()
                     .WithController<HaapiController>()
-                )                
+                )
+                 .WithWebApi("/ticket", m => m
+                    .WithController<TicketController>()
+                )
                 .WithStaticFolder("/primus/primus.js", "data/primus.js", true, m => m.WithContentCaching(true).WithDefaultExtension(".js"))
                 .WithModule(new AuthServer("/primus/"))
              //   .WithStaticFolder("/primus/", "data/", false, m => m.WithContentCaching(true).WithDefaultExtension(".js"))  

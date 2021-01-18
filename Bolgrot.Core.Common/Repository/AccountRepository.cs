@@ -74,10 +74,10 @@ namespace Bolgrot.Core.Common.Repository
 
             if (account == null)
             {
-                string defaultname = DatabaseManager.Database;
+                //string defaultname = DatabaseManager.Database;
                 
                 this.DatabaseManager.Open();
-                DatabaseManager.ChangeDatabase("bolgrot_auth");
+                //DatabaseManager.ChangeDatabase("bolgrot_auth");
 
                 var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>(x => x.Ticket == ticket);
                 //var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>($"SELECT * FROM bolgrot_auth.Account WHERE bolgrot_auth.Account.Ticket =\"{ticket}\"");
@@ -86,7 +86,7 @@ namespace Bolgrot.Core.Common.Repository
                     account = fetchedAccounts.First();
                     this.Entities().TryAdd(account.Id, account);
                 }
-                DatabaseManager.ChangeDatabase(defaultname);
+               //DatabaseManager.ChangeDatabase(defaultname);
                 this.DatabaseManager.Close();
                 
             }
