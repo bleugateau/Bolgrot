@@ -35,6 +35,7 @@ namespace Bolgrot.Tools.MITM.Network
 
             WebSocket = new WebSocket(
                 "wss://"+address+"/primus/?STICKER=MzaXv8YYQgBSMcNa&_primuscb=NCGGIcA&EIO=3&transport=websocket&t=NCGGIcA&b64=1");
+            //WebSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Default;
             WebSocket.OnMessage += (sender, args) =>
             {
                 string message = args.Data;
@@ -42,7 +43,7 @@ namespace Bolgrot.Tools.MITM.Network
                 if (message.Contains("SelectedServerDataMessage"))
                 {
                     var messageObject = JsonConvert.DeserializeObject<JObject>(message.Substring(1, message.Length - 1));
-                    messageObject["_access"] = "http://localhost:446";
+                    messageObject["_access"] = "http://localhost:667";
                     
                     message = "4"+JsonConvert.SerializeObject(messageObject);
                 }
@@ -52,7 +53,17 @@ namespace Bolgrot.Tools.MITM.Network
                 Console.WriteLine($"[RCV] -> {message}");
             };
 
-            WebSocket.OnError += (sender, args) => { Console.WriteLine("Error"); };
+            WebSocket.OnError += (sender, args) => { 
+                Console.WriteLine("Error"); 
+            };
+            WebSocket.OnClose += (sender, e) =>
+            {
+                //TlsHandshakeFailure
+                if (e.Code == 1015)
+                {
+                    //WebSocket.Connect();
+                }
+            };
 
             WebSocket.ConnectAsync();
         }

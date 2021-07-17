@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bolgrot.Tools.MITM.Network;
 using EmbedIO;
+using EmbedIO.Files;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Swan.Logging;
@@ -26,10 +27,10 @@ namespace Bolgrot.Tools.MITM
 
             this.dataGridView1.Sort(this.dataGridView1.Columns[0], ListSortDirection.Descending);
             
-            var server = CreateWebServer("http://localhost:440/", ClientTypeEnum.AUTH);
+            var server = CreateWebServer("http://localhost:3001/", ClientTypeEnum.AUTH);
             server.RunAsync();
 
-            var worldServer = CreateWebServer("http://localhost:446/", ClientTypeEnum.WORLD);
+            var worldServer = CreateWebServer("http://localhost:667/", ClientTypeEnum.WORLD);
             worldServer.RunAsync();
 
             this.recordButton.Enabled = !Record;
@@ -67,8 +68,8 @@ namespace Bolgrot.Tools.MITM
                 $"{Enum.GetName(typeof(ClientTypeEnum), clientTypeEnum)}",
                 message
             })));
-            
-            this.dataGridView1.Invoke(new Action(() => dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.RowCount-1));
+            if(this.checkBox1.Checked)
+                this.dataGridView1.Invoke(new Action(() => dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.RowCount-1));
         }
         
         private WebServer CreateWebServer(string url, ClientTypeEnum clientTypeEnum)
@@ -76,12 +77,26 @@ namespace Bolgrot.Tools.MITM
             var server = new WebServer(o => o
                     .WithUrlPrefix(url)
                     .WithMode(HttpListenerMode.EmbedIO))
-                .WithModule(new WebSocketPrimusServer("/primus/", clientTypeEnum, this));
+                .WithCors()
+                .WithStaticFolder("/primus/primus.js", "data/primus.js", true, m => m.WithContentCaching(true).WithDefaultExtension(".js"))
+                .WithModule(new WebSocketPrimusServer("/primus/", clientTypeEnum, this))
+               .WithStaticFolder("/", "data/", false);
+               // .HandleHttpException(DataResponseForHttpException).HandleUnhandledException(DataResponseForHandleUnhandledException);
 
             // Listen for state changes.
             server.StateChanged += (s, e) => $"WebServer New State - {e.NewState}".Info();
 
             return server;
+        }
+        public static Task DataResponseForHttpException(IHttpContext context, IHttpException httpException)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+            return ResponseSerializer.Json(context, httpException.Message);
+        }
+        public static Task DataResponseForHandleUnhandledException(IHttpContext context, Exception exception)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+            return ResponseSerializer.Json(context, exception.Message);
         }
 
         private void recordButton_Click(object sender, EventArgs e)
@@ -98,6 +113,20 @@ namespace Bolgrot.Tools.MITM
             
             this.stopRecordingButton.Enabled = false;
             this.recordButton.Enabled = true;
+        }
+
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            foreach (DataGridViewCell cell in this.dataGridView1.SelectedCells)
+            {
+                this.richTextBox1.Text += cell.Value.ToString()+ "\r\n";
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            this.richTextBox1.Text = "";
         }
     }
 }

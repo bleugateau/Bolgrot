@@ -48,7 +48,7 @@ namespace Bolgrot.Server.Auth.Managers
                 if (account.ApiKeyExpirationDate == null || (DateTime) account.ApiKeyExpirationDate <= DateTime.Now)
                 {
                     editedAccount.ApiKey = Guid.NewGuid().ToString();
-                    editedAccount.ApiKeyExpirationDate = DateTime.Now.AddHours(4);
+                    editedAccount.ApiKeyExpirationDate = DateTime.Now.AddHours(50);//4
                 }
 
                 editedAccount.Ip = ipAddress;
@@ -66,7 +66,7 @@ namespace Bolgrot.Server.Auth.Managers
                 Currency = "EUR"
             };
             createApiResponse.Key = account.ApiKey;
-            createApiResponse.ExpirationDate = DateTime.Now.AddHours(4);
+            createApiResponse.ExpirationDate = DateTime.Now.AddHours(50);//4
             createApiResponse.RefreshToken = "";
             createApiResponse.Ip = account.Ip;
 
@@ -95,7 +95,7 @@ namespace Bolgrot.Server.Auth.Managers
             }
             
             this._logger.Debug($"Token value before edit {account.Token}");
-            
+
             //edit token and save it
             this._accountRepository.Entities().AddOrUpdate(account.Id, account, (i, editedAccount) =>
             {
@@ -104,8 +104,8 @@ namespace Bolgrot.Server.Auth.Managers
                 return editedAccount;
             });
 
-            createTokenResponse.Token = account.Token;
-            
+            createTokenResponse.Token = account.Token;//"7j60imkfu60w";//account.Token;
+
             this._logger.Debug($"Token value after edit {createTokenResponse.Token}");
             
 

@@ -10,6 +10,7 @@ namespace Bolgrot.Core.Common.Network
     public abstract class AbstractServer : WebSocketModule
     {
         public ConcurrentDictionary<string, Client> Clients { get; set; }
+        
         protected readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public AbstractServer(string urlPath, bool enableConnectionWatchdog) : base(urlPath, enableConnectionWatchdog)
@@ -65,7 +66,7 @@ namespace Bolgrot.Core.Common.Network
             Disconnect(((Client) sender).ContextId);
         }
 
-        private Task Disconnect(string contextId)
+        protected virtual Task Disconnect(string contextId)
         {
             if (!this.Clients.ContainsKey(contextId))
                 return null;
@@ -79,7 +80,7 @@ namespace Bolgrot.Core.Common.Network
 
             return Task.CompletedTask;
         }
-        
+
         protected void SendMessageEventHandler(object sender, SendMessageEventArgs eventArgs)
         {
             SendMessage(((Client) sender).ContextId, eventArgs.message);
@@ -98,5 +99,6 @@ namespace Bolgrot.Core.Common.Network
             
             return Task.CompletedTask;
         }
+      
     }
 }

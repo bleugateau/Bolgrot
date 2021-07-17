@@ -18,13 +18,15 @@ namespace Bolgrot.Server.Auth.Controller
         [Route(HttpVerbs.Get, "/haapi/getForumTopicsList")]
         public async Task GetForumTopicsList()
         {
-            var lang = this.HttpContext.GetRequestQueryData().Get("lang");
-
+            var lang = this.HttpContext.GetRequestQueryData().Get("lang");            
             List<Topic> topics = new List<Topic>();
-            // topics.Add(new Topic(1, "Mise à jour 0.0.1", "Test", false, "2020-06-16T09:30:00+02:00"));
-            // topics.Add(new Topic(2, "Mise à jour 0.0.2", "[color=#2ecc71][b]MONSTRES[/b][/color][list][*]7pho au dessus XDDDDDD Les sorts du boss Nileza sont corrigés.[*]Les sorts du monstre Ecureuil d’Astrub sont corrigés.[/list]\n[color=#2ecc71][b]QUÊTES[/b][/color][list][*]Il est de nouveau possible de terminer la quête « Hérault de la Forêt » en étant aligné du côté de Bonta.[*]Il est de nouveau possible de terminer la quête « Pandala : Son air pur ».[*]Il est de nouveau possible de terminer la quête « Le règlement de comptes de Bworkékorall ».[/list]\n[color=#2ecc71][b]RECETTES[/b][/color][list][*]La recette de la Coiffe Cryochrone est corrigée.[*]Le texte du Plan de l’abreuvoir frigostien en Charme est corrigé afin de concorder avec la nouvelle recette.[*]Le texte de la Recette du masque de protection est corrigé afin de concorder avec la nouvelle recette.[/list]\n[color=#2ecc71][b]ÎLE DE L’ASCENSION[/b][/color][list][*]Une nouvelle rotation de l’île de l’Ascension commence dès maintenant ! [url=https://www.dofus-touch.com/fr/mmorpg/actualites/news/1196997-ile-ascension-rotation-9]En savoir plus[/url][/list]", false, "2020-06-02T09:00:00+02:00"));
-            // topics.Add(new Topic(3, "Mise à jour 0.0.3", "Test", false, ""));
-            
+            topics.Add(new Topic() { Id = 1, Title = "Mise à jour 0.0.1", Content = "Test", Pinned = false, AddedDate = "2020-06-16T09:30:00+02:00" });
+            topics.Add(new Topic() { Id = 2, Title = "Mise à jour 0.0.2", Content = "[color=#2ecc71][b]MONSTRES[/b][/color][list][*]7pho au dessus XDDDDDD Les sorts du boss Nileza sont corrigés.[*]Les sorts du monstre Ecureuil d’Astrub sont corrigés.[/list]\n[color=#2ecc71][b]QUÊTES[/b][/color][list][*]Il est de nouveau possible de terminer la quête « Hérault de la Forêt » en étant aligné du côté de Bonta.[*]Il est de nouveau possible de terminer la quête « Pandala : Son air pur ».[*]Il est de nouveau possible de terminer la quête « Le règlement de comptes de Bworkékorall ».[/list]\n[color=#2ecc71][b]RECETTES[/b][/color][list][*]La recette de la Coiffe Cryochrone est corrigée.[*]Le texte du Plan de l’abreuvoir frigostien en Charme est corrigé afin de concorder avec la nouvelle recette.[*]Le texte de la Recette du masque de protection est corrigé afin de concorder avec la nouvelle recette.[/list]\n[color=#2ecc71][b]ÎLE DE L’ASCENSION[/b][/color][list][*]Une nouvelle rotation de l’île de l’Ascension commence dès maintenant ! [url=https://www.dofus-touch.com/fr/mmorpg/actualites/news/1196997-ile-ascension-rotation-9]En savoir plus[/url][/list]", Pinned = false, AddedDate = "2020-06-02T09:00:00+02:00" });
+            topics.Add(new Topic() { Id = 3, Title = "Mise à jour 0.0.3", Content = "Test", Pinned = false, AddedDate = "" });
+            //topics.Add(new Topic(1, "Mise à jour 0.0.1", "Test", false, "2020-06-16T09:30:00+02:00"));
+            //topics.Add(new Topic(2, "Mise à jour 0.0.2", "[color=#2ecc71][b]MONSTRES[/b][/color][list][*]7pho au dessus XDDDDDD Les sorts du boss Nileza sont corrigés.[*]Les sorts du monstre Ecureuil d’Astrub sont corrigés.[/list]\n[color=#2ecc71][b]QUÊTES[/b][/color][list][*]Il est de nouveau possible de terminer la quête « Hérault de la Forêt » en étant aligné du côté de Bonta.[*]Il est de nouveau possible de terminer la quête « Pandala : Son air pur ».[*]Il est de nouveau possible de terminer la quête « Le règlement de comptes de Bworkékorall ».[/list]\n[color=#2ecc71][b]RECETTES[/b][/color][list][*]La recette de la Coiffe Cryochrone est corrigée.[*]Le texte du Plan de l’abreuvoir frigostien en Charme est corrigé afin de concorder avec la nouvelle recette.[*]Le texte de la Recette du masque de protection est corrigé afin de concorder avec la nouvelle recette.[/list]\n[color=#2ecc71][b]ÎLE DE L’ASCENSION[/b][/color][list][*]Une nouvelle rotation de l’île de l’Ascension commence dès maintenant ! [url=https://www.dofus-touch.com/fr/mmorpg/actualites/news/1196997-ile-ascension-rotation-9]En savoir plus[/url][/list]", false, "2020-06-02T09:00:00+02:00"));
+            //topics.Add(new Topic(3, "Mise à jour 0.0.3", "Test", false, ""));
+
             await this.HttpContext.SendStringAsync(JsonConvert.SerializeObject(topics, Formatting.Indented), "json", Encoding.Default);
         }
         
@@ -40,6 +42,7 @@ namespace Bolgrot.Server.Auth.Controller
 
         
         [Route(HttpVerbs.Post, "/haapi/Ankama/v5/Api/CreateApiKey")]
+        [Route(HttpVerbs.Post, "/haapi/CreateApiKey")]
         public async Task CreateApiKey()
         {
             string requestedPayload = await this.HttpContext.GetRequestBodyAsStringAsync();
@@ -59,6 +62,7 @@ namespace Bolgrot.Server.Auth.Controller
         }
         
         [EmbedIO.Routing.Route(HttpVerbs.Get, "/haapi/Ankama/v5/Account/CreateToken")]
+        [EmbedIO.Routing.Route(HttpVerbs.Get, "/haapi/CreateToken")]
         public async Task CreateToken()
         {
             
@@ -75,7 +79,7 @@ namespace Bolgrot.Server.Auth.Controller
             {
                 this.HttpContext.Response.StatusCode = 601;
             }
-            
+
             await this.HttpContext.SendStringAsync(response, "application/json", Encoding.Default);
         }
     }

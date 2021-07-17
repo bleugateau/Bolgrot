@@ -30,6 +30,7 @@ namespace Bolgrot.Server.Auth
 
             //repository
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
+           builder.RegisterType<WorldServerRepository>().As<IWorldServerRepository>().SingleInstance();
             builder.RegisterType<AuthRepositoryPersistManager>().AsSelf().OnActivating(e => e.Instance.StartPersister())
                 .AutoActivate()
                 .SingleInstance();
@@ -38,6 +39,15 @@ namespace Bolgrot.Server.Auth
             // builder.RegisterType<DataManager>().As<IDataManager>().OnActivating(e => e.Instance.Initialize())
             //     .AutoActivate()
             //     .SingleInstance();
+            builder.RegisterType<WorldServerManager>().As<IWorldServerManager>()
+                .AutoActivate()
+                .SingleInstance();
+
+            builder.RegisterType<TicketManager>().As<ITicketManager>()
+                .AutoActivate()
+                .SingleInstance();
+
+
             builder.RegisterType<HaapiManager>().As<IHaapiManager>().SingleInstance();
 
             _container = builder.Build();

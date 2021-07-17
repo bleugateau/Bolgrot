@@ -60,7 +60,7 @@ namespace Bolgrot.Server.Game.Frames
         public static void SendCharactersListMessage(GameClient client)
         {
             var characters = Container.Instance().Resolve<ICharacterRepository>().Entities().Values
-                .Where(x => x.AccountId == 1 && !x.IsDeleted);
+                .Where(x => x.AccountId == client.Account.Id && !x.IsDeleted);
 
             client.Send(new CharactersListMessage(false, characters.Select(x => x.ToCharacterBaseInformations()).ToArray()));
         }

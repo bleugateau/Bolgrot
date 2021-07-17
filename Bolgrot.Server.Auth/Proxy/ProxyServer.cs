@@ -20,12 +20,13 @@ namespace Bolgrot.Server.Auth.Proxy
             this.ProxyUrl = address;
         }
 
+
         public Task Start()
         {
             
             using (var server = this.CreateWebServer())
             {
-                // Once we've registered our modules and configured them, we call the RunAsync() method.
+                // Once we've registered our modules and configured them, we call the RunAsync() method.          
                 server.RunAsync();
                 Console.ReadKey(true);
             }
@@ -36,12 +37,13 @@ namespace Bolgrot.Server.Auth.Proxy
         private WebServer CreateWebServer()
         {
             
-            Logger.UnregisterLogger<ConsoleLogger>();
+            Logger.UnregisterLogger<ConsoleLogger>();           
 
             return new WebServer(o => o
                     .WithUrlPrefix(this.ProxyUrl)
-                    .WithMode(HttpListenerMode.Microsoft)
+                    .WithMode(HttpListenerMode.EmbedIO)                    
                 )
+                .WithCors()
                 .WithLocalSessionManager()
                 .WithWebApi("/api", m => m
                     .WithController<DataController>()
@@ -49,12 +51,28 @@ namespace Bolgrot.Server.Auth.Proxy
                 )
                 .WithWebApi("/haapi", m => m
                     .WithController<CmsController>()
+                    .WithController<HaapiController>()
                 )
+                 .WithWebApi("/ticket", m => m
+                    .WithController<TicketController>()
+                )
+                .WithStaticFolder("/primus/primus.js", "data/primus.js", true, m => m.WithContentCaching(true).WithDefaultExtension(".js"))
                 .WithModule(new AuthServer("/primus/"))
-                .WithStaticFolder("/optimus", "primus/", true, m => m
-                    .WithContentCaching(true).WithDefaultExtension(".js")
-                )
-                .WithStaticFolder("/", "data/", true);
+             //   .WithStaticFolder("/primus/", "data/", false, m => m.WithContentCaching(true).WithDefaultExtension(".js"))  
+                .WithStaticFolder("/", "data/", true, m => m.WithContentCaching(true).WithDefaultExtension(".json"))
+               .HandleHttpException(DataResponseForHttpException).HandleUnhandledException(DataResponseForHandleUnhandledException)
+                ;
         }
+        public static Task DataResponseForHttpException(IHttpContext context, IHttpException httpException)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
+            return ResponseSerializer.Json(context, httpException.Message);
+        }
+        public static Task DataResponseForHandleUnhandledException(IHttpContext context, Exception exception)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.OK; 
+            return ResponseSerializer.Json(context, exception.Message);
+        }
+
     }
 }

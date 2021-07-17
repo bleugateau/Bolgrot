@@ -92,6 +92,8 @@ namespace Bolgrot.Core.Common.Managers.Pathfinding
             foreach (var cell in keyMovements)
             {
                 int cellId = cell & 4095;
+                //if (map.Cells.ToList()[cellId] != null){
+                  //  decompressedCells.Add(map.Cells.ToList()[cellId]);                } 
                 decompressedCells.Add(map.Cells.ToList().FirstOrDefault(x => x.Id == cellId));
             }
 

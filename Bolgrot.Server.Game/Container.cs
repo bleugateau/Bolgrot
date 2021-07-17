@@ -2,8 +2,10 @@
 using Autofac;
 using Bolgrot.Core.Common.Managers.Data;
 using Bolgrot.Core.Common.Managers.Pathfinding;
+using Bolgrot.Core.Common.Network;
 using Bolgrot.Core.Common.Repository;
 using Bolgrot.Server.Game.Managers;
+using Bolgrot.Server.Game.Network;
 using ServiceStack.OrmLite;
 
 namespace Bolgrot.Server.Game
@@ -25,6 +27,7 @@ namespace Bolgrot.Server.Game
                     "Server=localhost;Database=arkanic_game;Uid=root;Pwd=;", MySql55Dialect.Provider)));
 
             //repository entities persister
+            builder.RegisterType<AccountRepository>().As<IAccountRepository>().AutoActivate().SingleInstance();
             builder.RegisterType<RepositoryPersistManager>().AsSelf().OnActivating(e => e.Instance.StartPersister())
                 .AutoActivate()
                 .SingleInstance();
@@ -54,7 +57,21 @@ namespace Bolgrot.Server.Game
             builder.RegisterType<CharacterManager>().As<ICharacterManager>()
                 .AutoActivate()
                 .SingleInstance();
-            
+            //test
+            builder.RegisterType<WorldManager>().As<IWorldManager>().OnActivating(e => e.Instance.Initialize())
+               .AutoActivate()
+               .SingleInstance();
+            builder.RegisterType<LangManager>().As<ILangManager>().OnActivating(e => e.Instance.Initialize())
+               .AutoActivate()
+               .SingleInstance();
+
+            //builder.RegisterType<AuthenticationManager>().As<IAuthenticationManager>().OnActivating(e => e.Instance.Initialize())
+            //   //.AutoActivate()
+            //   .SingleInstance();
+            //builder.RegisterType<AuthenticationManager>().As<IAuthenticationManager>().SingleInstance();
+
+
+
             _container = builder.Build();
         }
 

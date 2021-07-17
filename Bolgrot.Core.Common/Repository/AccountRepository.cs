@@ -13,6 +13,7 @@ namespace Bolgrot.Core.Common.Repository
     {
         Task<Account> GetAccountByLogin(string login);
         Task<Account> GetAccountByApiKey(string apikey);
+        Task<Account> GetAccountByTicket(string ticket);
     }
 
     public class AccountRepository : Repository<Account>, IAccountRepository
@@ -64,5 +65,37 @@ namespace Bolgrot.Core.Common.Repository
 
             return account;
         }
+        public async Task<Account> GetAccountByTicket(string ticket)
+        {
+            var keyValue = this.Entities().FirstOrDefault(x => x.Value is Account && x.Value.Ticket == ticket);
+            var teste = this.Entities();
+            Account account = (keyValue.Key == null ? null : keyValue.Value);
+
+
+            if (account == null)
+            {
+                //string defaultname = DatabaseManager.Database;
+                
+                this.DatabaseManager.Open();
+                //DatabaseManager.ChangeDatabase("bolgrot_auth");
+
+                var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>(x => x.Ticket == ticket);
+                //var fetchedAccounts = await this.DatabaseManager.SelectAsync<Account>($"SELECT * FROM bolgrot_auth.Account WHERE bolgrot_auth.Account.Ticket =\"{ticket}\"");
+                if (fetchedAccounts.Count != 0)
+                {
+                    account = fetchedAccounts.First();
+                    this.Entities().TryAdd(account.Id, account);
+                }
+               //DatabaseManager.ChangeDatabase(defaultname);
+                this.DatabaseManager.Close();
+                
+            }
+
+            return account;
+        }
+        //public void ForceSave() {
+        //    base.PersistEntities();
+        //}
+
     }
 }

@@ -50,7 +50,7 @@ namespace Bolgrot.Server.Auth.Controller
             var staticDataVersion = this.HttpContext.GetRequestQueryData().Get("staticDataVersion");
             var assetsVersionsJson = new JObject();
 
-            assetsVersionsJson["assetsVersion"] = assetsVersion.ToString();
+            assetsVersionsJson["assetsVersion"] = "5";//assetsVersion.ToString();
             assetsVersionsJson["staticDataVersion"] = staticDataVersion.ToString();
             assetsVersionsJson["changedFiles"] = new JArray(new string[]{ });
             
@@ -68,7 +68,7 @@ namespace Bolgrot.Server.Auth.Controller
             
             if (!File.Exists($"data/map/{mapDataRequest.@class}.json"))
             {
-                this.HttpContext.SendStringAsync(JsonConvert.SerializeObject("[]"), "application/json", Encoding.Default);
+                await this.HttpContext.SendStringAsync(JsonConvert.SerializeObject("[]"), "application/json", Encoding.Default);
             }
             
             StreamReader reader = new StreamReader($"data/map/{mapDataRequest.@class}.json");
@@ -79,5 +79,6 @@ namespace Bolgrot.Server.Auth.Controller
             
             await this.HttpContext.SendStringAsync(data, "application/json", Encoding.Default);
         }
+        //api/logger ?
     }
 }

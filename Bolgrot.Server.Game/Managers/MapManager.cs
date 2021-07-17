@@ -70,8 +70,7 @@ namespace Bolgrot.Server.Game.Managers
             var decompressedKeyMovements =
                 this._pathfinderManager.DecompressKeyMovements(map, gameMapMovementRequestMessage.keyMovements);
 
-            if ((gameMapMovementRequestMessage.keyMovements.Length - 1) <= 0 ||
-                decompressedKeyMovements.Find(x => !x.IsWalkable()) != null)
+            if ((gameMapMovementRequestMessage.keyMovements.Length - 1) <= 0 || decompressedKeyMovements.Find(x => x != null && !x.IsWalkable()) != null || decompressedKeyMovements.Find(x=> x!=null) == null)
             {
                 client.Send(new GameMapNoMovementMessage());
                 return;
@@ -90,6 +89,21 @@ namespace Bolgrot.Server.Game.Managers
 
             //update
             this._characterRepository.UpdateEntity(client.Character.Id, client.Character);
+            //if (walk)
+            //foreach (var othersClients in Container.Instance().Resolve<IWorldManager>().GetNearestClientsFromCharacter(client.Character))
+            //{
+            //othersClients.Send(new GameCautiousMapMovementMessage(paths, 0, client.Character.Id));
+            //othersClients.Send(new BasicNoOperationMessage());
+            //}
+            //else
+            {
+                foreach (var othersClients in Container.Instance().Resolve<IWorldManager>().GetNearestClientsFromCharacter(client.Character))
+                {
+                    othersClients.Send(new GameMapMovementMessage(paths, client.Character.Id));
+                    othersClients.Send(new BasicNoOperationMessage());
+                }    
+            }
+            client.Send(new BasicNoOperationMessage());
         }
 
 
@@ -157,8 +171,9 @@ namespace Bolgrot.Server.Game.Managers
                 }
             }
             
-            client.Send(new MapComplementaryInformationsDataMessage(778, map.Id, new int[] { }, actors.ToArray(),
+            client.Send(new MapComplementaryInformationsDataMessage(445, map.Id, new int[] { }, actors.ToArray(),
                 interactiveElements.ToArray(), statedElements.ToArray(), new int[] { }, new int[] { }));
+            Enter(client.Character);
         }
 
         /**
@@ -203,7 +218,7 @@ namespace Bolgrot.Server.Game.Managers
                 client.Disconnect();
                 return;
             }
-
+            Leave(client.Character);
             client.Character.MapId = mapDestination.Id;
             client.Character.CellId =
                 this._pathfinderManager.GetOppositeCellId(mapDestination, client.Character.CellId);
@@ -214,6 +229,25 @@ namespace Bolgrot.Server.Game.Managers
 
             //update
             this._characterRepository.UpdateEntity(client.Character.Id, client.Character);
+            Enter(client.Character);
+        }
+        public void Leave(AbstractEntity actor)
+        {
+            if (actor is Character)
+                foreach (var othersClients in Container.Instance().Resolve<IWorldManager>().GetNearestClientsFromCharacter(actor as Character))
+                othersClients.Send(new GameContextRemoveElementMessage(actor.Id));
+
+        }
+        public void Enter(AbstractEntity actor)
+        {
+            if(actor is Character)
+            foreach (var othersClients in Container.Instance().Resolve<IWorldManager>().GetNearestClientsFromCharacter(actor as Character))
+                othersClients.Send(new GameRolePlayShowActorMessage(new GameRolePlayCharacterInformations((actor as Character).Id, (actor as Character).EntityLook,
+                    new EntityDispositionInformations((actor as Character).CellId, 3), (actor as Character).Name,
+                    new HumanInformations(), (actor as Character).AccountId, new ActorAlignmentInformations(0, 0, 0, 3956606))));
+        
+            
+
         }
 
 
@@ -241,6 +275,11 @@ namespace Bolgrot.Server.Game.Managers
 
                     if (map != null)
                     {
+                        // fix cells ids
+                        for (int i = 0; i < map.Cells.ToList().Count; i++)
+                        {
+                            map.Cells[i].Id = i;
+                        }
                         //retrieve npcs
                         map.NpcSpawns = this._npcManager.GetNpcSpawnsByMapId(map.Id);
 

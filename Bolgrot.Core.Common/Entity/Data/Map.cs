@@ -72,7 +72,10 @@ namespace Bolgrot.Core.Common.Entity.Data
 
     public partial class Cell
     {
-        [JsonProperty("id")] public int Id { get; set; }
+        [JsonProperty("id")] 
+        public int Id {
+            get; 
+            set; }
 
         [JsonProperty("l", NullValueHandling = NullValueHandling.Ignore)]
         public int L { get; set; }
